@@ -1,0 +1,36 @@
+h2{
+	background-color: #063D79;
+	background-image: url("unilogo.png");
+	background-repeat: no-repeat;
+	background-size: contain;
+	min-width: 768px;
+	align: center;
+	text-align: center;
+	color: white;
+	vertical-align: middle;
+}
+
+.col-sm-12{
+	background-color: #063D79;
+}
+
+.tabbable{
+	margin: 10px;
+	min-height: 550px;
+}
+
+.bottom{
+	position: absolute;
+	left: 15px;
+	bottom: 0;
+	right: 15px;
+	min-width: 1024px;
+	border: 1px solid #063D79;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+body{
+	min-width:1024px;
+	min-height: 768px;
+}
