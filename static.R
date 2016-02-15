@@ -1,41 +1,39 @@
-# Define the ranges, the different distributions are allowed to use
+### Functions defined in this file:
+
+# allowed.Ranges 
+# limitRange 
+# border.norm
+# border.exp
+# hypothesis.plot
+# crit.value.calculator
+
+
+################################################################################
+#                                                                          
+#             Functions used in the server.r file                         
+#
+################################################################################
+
 allowed.Ranges <- function(input) {
-  return(switch(
+  # This functions picks the right default x-axis range for each distribution
+  switch(
     input$dist,
-    'Normal distribution' = {
-      c(-50,50,-5,5)
-    },
-    'Log-normal distribution' = {
-      c(-1,100,0,5)
-    },
-    'Exponential distribution' = {
-      c(-1,100,0,5)
-    },
-    'Beta distribution' = {
-      c(-50,50,-5,5)
-    },
-    'Binomial distribution' = {
-      c(0,100,0,10)
-    },
-    'Chi-Square' = {
-      c(0,100,0,5)
-    },
-    'Poisson distribution' = {
-      c(0,100,0,10)
-    },
-    't-distribution' = {
-      c(-50,50,-5,5)
-    },
-    'F-distribution' = {
-      c(0,50,0,5)
-    },
-    'Uniform distribution' = {
-      c(-50,50,-5,5)
-    }
-  ))
+    'Normal distribution' = c(-50, 50, -5, 5),
+    't-distribution' = c(-50, 50, -5, 5),
+    'Chi-Square' = c(0, 100, 0, 5),
+    'F-distribution' = c(0, 50, 0, 5),
+    'Exponential distribution' = c(-1, 100, 0, 5),
+    'Uniform distribution' = c(-50, 50, -5, 5),
+    'Binomial distribution' = c(0, 100, 0, 10),
+    'Poisson distribution' = c(0, 100, 0, 10)
+    # 'Log-normal distribution' = c(-1, 100, 0, 5),
+    # 'Beta distribution' = c(-50, 50, -5, 5)
+  )
 }
 
 limitRange <- function(fun, min, max, ...) {
+  # This function is used to plot the shaded area under the distribution 
+  # curve
   function(x) {
     y <- fun(x, ...)
     y[x < min | x > max] <- NA
@@ -44,33 +42,35 @@ limitRange <- function(fun, min, max, ...) {
 }
 
 border.norm <- function(alpha, mean, sd){
+  # This function does what?
   return(qnorm(alpha, mean = mean, sd = sd))
 }
 
-border.lnorm <- function(alpha, meanlog, sdlog){
-  return(qlnorm(alpha, meanlog = meanlog, sdlog = sdlog))
-}
-
 border.exp <- function(alpha, rate){
+  # This function does what?
   return(qexp(alpha, rate = rate))
 }
 
-border.beta <- function(alpha, shape1, shape2){
-  return(qbeta(alpha, shape1 = shape1, shape2 = shape2))
-}
+# border.lnorm <- function(alpha, meanlog, sdlog){
+#   return(qlnorm(alpha, meanlog = meanlog, sdlog = sdlog))
+# }
+
+# border.beta <- function(alpha, shape1, shape2){
+#   return(qbeta(alpha, shape1 = shape1, shape2 = shape2))
+# }
 
 hypothesis.plot <- function(input, smoothing.points) {
-  n <- smoothing.points;
+  n <- smoothing.points
+  
   if (is.null(input$draw.range)) {
     outputrange <- allowed.Ranges(input)[3:4];
-  }else{
-    outputrange <- input$draw.range;
-  }
-  switch(
-    input$test.type,
+  } else {
+    outputrange <- input$draw.range
+  } 
+  
+  switch(input$test.type,
     'Two-Sided' = {
-      return(switch(
-        input$dist,
+      return(switch(input$dist,
         'Normal distribution' = {
           border <- c(border.norm(input$hypothesis.los.value/2, input$mu, input$sigma),
                       border.norm(1-input$hypothesis.los.value/2, input$mu, input$sigma));
@@ -513,14 +513,13 @@ hypothesis.plot <- function(input, smoothing.points) {
         }
       ))
     }
-  );
-  return(sf);
+  )
+  return(sf)
 }
 
 crit.value.calculator <- function(input) {
-  switch(
-    input$dist,
-    'Normal distribution' = {
+  switch(input$dist,
+         'Normal distribution' = {
       switch(
         input$test.type,
         'Two-Sided'={

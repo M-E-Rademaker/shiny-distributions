@@ -21,8 +21,10 @@ smoothing.points <- 1001;
 
 shinyServer(function(input, output) {
   output$dist.options <- renderUI({
-    allowed.Ranges <- allowed.Ranges(input);
-    return(switch(input$dist,
+    # This functions selects the distribution paramters corresponding to each
+    # distribution for the user to choose from.
+    
+    switch(input$dist,
       'Normal distribution' = {
         list(
           helpText("2. Wähle die Parameter der Verteilung und klicke", br(),
@@ -31,51 +33,20 @@ shinyServer(function(input, output) {
           numericInput(inputId = 'sigma', label = 'σ', value = 1, min = 0)
           )
       },
-      'Log-normal distribution' = {
-        list(
-          helpText("2. Wähle die Parameter der Verteilung und klicke anschließend
-                   auf den", strong("Verteilung zeichnen"), "Button."),
-          numericInput(inputId = 'mu', label = 'μ', value = 0),
-          numericInput(inputId = 'sigma', label = 'σ', value = 1, min = 0)
-          )
-      },
-      'Exponential distribution' = {
-        list(
-          helpText("Wähle den Parameter der Verteilung und klicke anschließend
-                   auf den", strong("Verteilung zeichnen"), "Button."),
-          numericInput(inputId = 'rate', label = 'λ', value = 1, min = 0, step = 0.5)
-          )
-      },
-      'Binomial distribution' = {
-        list(
-          helpText("Wähle die Parameter der Verteilung und klicke anschließend
-                   auf den", strong("Verteilung zeichnen"), "Button."),
-          numericInput(inputId = 'size', label = 'n', value = 10),
-          numericInput(inputId = 'prob', label = 'p', value = 0.5, 
-                       min = 0, max = 1, step = 0.1)
-          )
-      },
-      'Chi-Square' = {
-        list(
-          helpText("Wähle den Parameter der Verteilung und klicke anschließend
-                   auf den", strong("Verteilung zeichnen"), "Button."),
-          numericInput(inputId = 'df',label = 'Freiheitsgrade', value = 1, min = 0)
-          )
-      },
-      'Poisson distribution' = {
-        list(
-          helpText("Wähle den Parameter der Verteilung und klicke anschließend
-                   auf den", strong("Verteilung zeichnen"), "Button."),
-          numericInput(inputId = 'lambda',label = 'λ', value = 1, min = 0, step = 0.5)
-          )
-      },
       't-distribution' = {
         list(
           helpText("Wähle den Parameter der Verteilung und klicke anschließend
                    auf den", strong("Verteilung zeichnen"), "Button."),
           numericInput(
             inputId = 'df',label = 'Freiheitsgrade', value = 1, min = 0)
-          )
+        )
+      },
+      'Chi-Square' = {
+        list(
+          helpText("Wähle den Parameter der Verteilung und klicke anschließend
+                   auf den", strong("Verteilung zeichnen"), "Button."),
+          numericInput(inputId = 'df',label = 'Freiheitsgrade', value = 1, min = 0)
+        )
       },
       'F-distribution' = {
         list(
@@ -85,6 +56,13 @@ shinyServer(function(input, output) {
                        value = 10, min = 0),
           numericInput(inputId = 'df2',label = 'Nennerfreiheitsgrade', 
                        value = 5, min = 0)
+        )
+      },
+      'Exponential distribution' = {
+        list(
+          helpText("Wähle den Parameter der Verteilung und klicke anschließend
+                   auf den", strong("Verteilung zeichnen"), "Button."),
+          numericInput(inputId = 'rate', label = 'λ', value = 1, min = 0, step = 0.5)
           )
       },
       'Uniform distribution' = {
@@ -95,10 +73,33 @@ shinyServer(function(input, output) {
                       min = allowed.Ranges[1] + 1,
                       max = allowed.Ranges[2] - 1,
                       value = c(allowed.Ranges[3] + 1, allowed.Ranges[4] - 1)
-                      )
           )
-        
+        )
+      },
+      'Binomial distribution' = {
+        list(
+          helpText("Wähle die Parameter der Verteilung und klicke anschließend
+                   auf den", strong("Verteilung zeichnen"), "Button."),
+          numericInput(inputId = 'size', label = 'n', value = 10),
+          numericInput(inputId = 'prob', label = 'p', value = 0.5, 
+                       min = 0, max = 1, step = 0.1)
+          )
+      },
+      'Poisson distribution' = {
+        list(
+          helpText("Wähle den Parameter der Verteilung und klicke anschließend
+                   auf den", strong("Verteilung zeichnen"), "Button."),
+          numericInput(inputId = 'lambda',label = 'λ', value = 1, min = 0, step = 0.5)
+          )
       }
+      # 'Log-normal distribution' = {
+      #   list(
+      #     helpText("2. Wähle die Parameter der Verteilung und klicke anschließend
+      #              auf den", strong("Verteilung zeichnen"), "Button."),
+      #     numericInput(inputId = 'mu', label = 'μ', value = 0),
+      #     numericInput(inputId = 'sigma', label = 'σ', value = 1, min = 0)
+      #     )
+      # },
       # 'Beta distribution' = {
       #   list(
       #     helpText("Enter the parameters below:"),
@@ -110,8 +111,8 @@ shinyServer(function(input, output) {
       #     )
       #   )
       # },
-    ))
-  })
+    ) # END switch
+  }) # END renderUI
   
   ##############################################################################
   #                                                                            #
@@ -120,6 +121,7 @@ shinyServer(function(input, output) {
   ##############################################################################
   
   output$option.range <- renderUI({
+    # 
     allowed.Ranges <- allowed.Ranges(input)
     sI <- sliderInput("draw.range", NULL, 
                       min = allowed.Ranges[1],
@@ -139,6 +141,15 @@ shinyServer(function(input, output) {
       numericInput('n','Smoothing points', smoothing.points)
   })
   
+  output$crit.value <- renderText({
+    if(!is.na(input$hypothesis.los.value)){
+      return(paste("To a level of significance of", input$hypothesis.los.value,
+                   "the corresponding critical value is", crit.value.calculator(input)))
+    }else{
+      return("No level of significance given.")
+    }
+  })
+  
   ##############################################################################
   #                                                                            #
   #                           Plotting Distr.                                  #
@@ -146,25 +157,31 @@ shinyServer(function(input, output) {
   ##############################################################################
   
   output$dist.Plot <- renderPlot({
+    # This is the part that defines what plot is shown in the mainPanel.
+    # Default is the density and distribution function of the normal distribution
+    # Once the user clicks on the "Verteilung zeichnen" button, nplot is returned 
     if (input$draw.Plot) {
-      op <- nplot();
+      op <- nplot()
     } else {
-      op <- ggplot(data.frame(x = seq(-5, 5, 10/smoothing.points)), aes(x)) + 
-        stat_function(fun = dnorm, geom = "line");
+      
+      # Density function
+      op1 <- ggplot(data.frame(x = -5:5), aes(x)) + 
+        stat_function(fun = dnorm) +
+        ggtitle("Dichtefunktion der Normalverteilung") + 
+        labs(y = "f(x)")
+      
+      # Distribution function
+      op2 <- ggplot(data.frame(x = -5:5), aes(x)) + 
+        stat_function(fun = pnorm)+
+        ggtitle("Verteilungsfunktion der Normalverteilung") + 
+        labs(y = "F(x) = P(X < x)")
+      
+      op <- grid.arrange(op1, op2)
     }
-    return(op);
-  })
-
-  output$crit.value <- renderText({
-    if(!is.na(input$hypothesis.los.value)){
-      return(paste("To a level of significance of", input$hypothesis.los.value,
-                 "the corresponding critical value is", crit.value.calculator(input)))
-    }else{
-      return("No level of significance given.")
-    }
+    return(op)
   })
   
-  # Plotting the distributions
+### Define the what happens if the user clicks on "Verteilung zeichnen"
   
   nplot <- eventReactive(input$draw.Plot, {
     if (is.null(input$draw.range)) {
@@ -187,11 +204,13 @@ shinyServer(function(input, output) {
                       aes(x))
     switch(input$dist,
       'Normal distribution' = {
+        # Density Function
         outplot1 <- outplot + 
           stat_function(fun = dnorm, args = list(mean = input$mu, sd = input$sigma), 
                         geom = geom, n = n) +
           ggtitle("Dichtefunktion der Normalverteilung") + 
           labs(y = paste("Dichte: ", expression(f(x))))
+        # Distribution Function
         outplot2 <- outplot + 
           stat_function(fun = pnorm, 
                         args = list(mean = input$mu, sd = input$sigma), 
@@ -200,11 +219,6 @@ shinyServer(function(input, output) {
           labs(y = "F(x) = P(X < x)")
         
         outplot <- grid.arrange(outplot1, outplot2)
-      },
-      'Log-normal distribution' = {
-        outplot <- outplot +
-          stat_function(fun = dlnorm, args = list(mean = input$mu, sd = sqrt(input$sigma)), 
-                        geom = geom, n = n)
       },
       'Exponential distribution' = {
         outplot <- outplot +
@@ -250,6 +264,11 @@ shinyServer(function(input, output) {
   #                                            shape2 = input$shape2, ncp = 0), 
   #                   geom = geom, n = n)
   # },
+  # 'Log-normal distribution' = {
+  #   outplot <- outplot +
+  #     stat_function(fun = dlnorm, args = list(mean = input$mu, sd = sqrt(input$sigma)), 
+  #                   geom = geom, n = n)
+  # },
     )
     if (input$add.checkbox) {
       outplot <- grid.arrange(outplot1 + hypothesis.plot(input, n), 
@@ -269,99 +288,17 @@ shinyServer(function(input, output) {
   })
   
   ninfo <- eventReactive(input$draw.Plot, {
-    switch(
-      input$dist,
-      'Normal distribution' = {
-        includeMarkdown("inputTest.md")
-      },
-      'Log-normal distribution' = {
-        includeMarkdown("inputTest2.md")
-      },
-      'Exponential distribution' = {
-        HTML(
-          paste(
-            'The drawn distribution is the normal distribution. It is defined by it\'s mean, \\(\\mu\\), and it\'s variance, \\(\\sigma^2\\).','For the usage of newline equations, use this: $$\\sigma^2.$$', sep =
-              "<br/>"
-          )
-        )
-      },
-      'Beta distribution' = {
-        HTML(
-          paste(
-            'The drawn distribution is the normal distribution. It is defined by it\'s mean, \\(\\mu\\), and it\'s variance, \\(\\sigma^2\\).','For the usage of newline equations, use this: $$\\sigma^2.$$', sep =
-              "<br/>"
-          )
-        )
-      },
-      'Binomial distribution' = {
-        HTML(
-          paste(
-            'The drawn distribution is the normal distribution. It is defined by it\'s mean, \\(\\mu\\), and it\'s variance, \\(\\sigma^2\\).','For the usage of newline equations, use this: $$\\sigma^2.$$', sep =
-              "<br/>"
-          )
-        )
-      },
-      'Chi-Square' = {
-        HTML(
-          paste(
-            'The drawn distribution is the normal distribution. It is defined by it\'s mean, \\(\\mu\\), and it\'s variance, \\(\\sigma^2\\).','For the usage of newline equations, use this: $$\\sigma^2.$$', sep =
-              "<br/>"
-          )
-        )
-      },
-      'Poisson distribution' = {
-        HTML(
-          paste(
-            'The drawn distribution is the normal distribution. It is defined by it\'s mean, \\(\\mu\\), and it\'s variance, \\(\\sigma^2\\).','For the usage of newline equations, use this: $$\\sigma^2.$$', sep =
-              "<br/>"
-          )
-        )
-      },
-      't-distribution' = {
-        HTML(
-          paste(
-            'The drawn distribution is the normal distribution. It is defined by it\'s mean, \\(\\mu\\), and it\'s variance, \\(\\sigma^2\\).','For the usage of newline equations, use this: $$\\sigma^2.$$', sep =
-              "<br/>"
-          )
-        )
-      },
-      'F-distribution' = {
-        HTML(
-          paste(
-            'The drawn distribution is the normal distribution. It is defined by it\'s mean, \\(\\mu\\), and it\'s variance, \\(\\sigma^2\\).','For the usage of newline equations, use this: $$\\sigma^2.$$', sep =
-              "<br/>"
-          )
-        )
-      },
-      'Uniform distribution' = {
-        HTML(
-          paste(
-            'The drawn distribution is the normal distribution. It is defined by it\'s mean, \\(\\mu\\), and it\'s variance, \\(\\sigma^2\\).','For the usage of newline equations, use this: $$\\sigma^2.$$', sep =
-              "<br/>"
-          )
-        )
-      }
-    )
-  })
-  
-  ##############################################################################
-  #                                                                            #
-  #                             Helptext Output                                #
-  #                                                                            #
-  ##############################################################################
-  
-  output$help.line <- renderUI({
-    tags$div(class = 'bottom', checked = NA,
-             list(
-               tags$div(
-                 class = 'shiny-text-output', checked = NA, paste(
-                   "This is your help text, it will change depending on the distribution you selected. At the moment, you selected the"
-                   ,input$dist,"."
-                 )
-               ),
-               tags$div(
-                 class = 'shiny-text-output', checked = NA, 'dist.text(input$dist)'
-               )
-             ))
-  })
-})
+    switch(input$dist,
+      'Normal distribution' = includeMarkdown("docs/NormalDistribution.md"),
+      't-distribution' = includeMarkdown("docs/tDistribution.md"),
+      'Chi-Square' = includeMarkdown(),
+      'F-distribution' = includeMarkdown(),
+      'Exponential distribution' = includeMarkdown(),
+      'Uniform distribution' = includeMarkdown(),
+      'Binomial distribution' = includeMarkdown(),
+      'Poisson distribution' = includeMarkdown()
+      # 'Log-normal distribution' = 
+      # 'Beta distribution' = 
+    ) # END switch
+  }) # END eventReactive
+}) # END shinyServer
