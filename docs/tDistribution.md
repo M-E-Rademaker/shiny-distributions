@@ -1,15 +1,13 @@
+---
+output: html_document
+---
+
 ***
-# Die t-Verteilung
+
+### Die t-Verteilung
 
 Schreibweise:
 
-$$ X \sim N(\mu, \sigma^2) $$
+$$ X \sim t(k) \quad\text{mit}\quad k \in \mathbb{R}^{>0}$$
 
-Die Normalverteilung ist eine stetige Verteilung mit $\text{E}(X) = \mu$ und 
-$\text{Var}(X) = \sigma^2$.
-
-### Dichtefunktion
-
-$$ f(x) = \frac{1}{\sqrt{2\pi\sigma}}e^{-\frac{1}{2}\frac{(x - \mu)^2}{\sigma^2}} $$
-
-Some More Stuff
+#### Dichtefunktion:

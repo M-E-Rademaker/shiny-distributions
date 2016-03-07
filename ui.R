@@ -1,18 +1,26 @@
-library(shiny)
-library(shinythemes)
-
-### Begin ui
+################################################################################
+#                                                                            
+#                               Shiny user interface (ui)
+#                                                                            
+################################################################################
+### Begin ui -------------------------------------------------------------------
 
 shinyUI(
   fluidPage(
     theme = "stylesheet.css",
+    
+    ### Header -----------------------------------------------------------------
+    
     fluidRow(
       column(width = 12,
-             column(width = 10, 
+             column(width = 12, 
                     titlePanel("Verteilungsfunktionen und Hypothesentests"))),
       column(width = 11, br())
     ),
     sidebarLayout(
+      
+    ### Sidebar ----------------------------------------------------------------
+      
       sidebarPanel(width = 3,
         tabsetPanel(
           tabPanel("Verteilungen",
@@ -29,7 +37,7 @@ shinyUI(
                             'Poisson distribution'
                             )
                           )
-              ), 
+              ), # END fluidRow 
             uiOutput('dist.options'),
             helpText("3. Wähle den gewünschten x-Achsenbereich"),
             uiOutput('option.range'),
@@ -52,16 +60,19 @@ shinyUI(
                    fluidRow(
                      uiOutput('option.geom'),
                      uiOutput('option.smoothing.points')
-                   ))
-        )), 
-      ### END sidebar panel
+                     )
+                   ) # END tabPanel
+            ) # END tabsetPanel
+        ), # END sidebarLayout
+      
+    ### MainPanel --------------------------------------------------------------
       
       mainPanel(
         plotOutput('dist.Plot'),
         br(), 
         if (!is.null('dist.Plot')) { 
           uiOutput('dist.Info')
-          })
+          }) # END mainPanel
     ) # END sidebar layout
   ) # END fluid page
 ) # END shiny ui

@@ -1,28 +1,32 @@
-library(shiny)
-library(ggplot2)
-library(gridExtra)
-
-if (!exists("allowed.Ranges", mode = "function"))
-  source("static.R")
-
-##############################################################################
-#                                                                            #
-#                             Default Values                                 #
-#                                                                            #
-##############################################################################
-
-smoothing.points <- 1001;
-
 ##############################################################################
 #                                                                            #
 #                               Shiny Server                                 #
 #                                                                            #
 ##############################################################################
 
+### Load required packages
+
+library(shiny)
+library(shinythemes)
+library(ggplot2)
+library(gridExtra)
+
+### Source static.r
+
+if (!exists("allowed.Ranges", mode = "function"))
+  source("static.R")
+
+### Default values
+
+smoothing.points <- 1001;
+
+
+### Begin server ---------------------------------------------------------------
+
 shinyServer(function(input, output) {
   output$dist.options <- renderUI({
-    # This functions selects the distribution paramters corresponding to each
-    # distribution for the user to choose from.
+    # This functions defines which paramaters the user can choose from after
+    # selecting a distribution and what values these paramters can take.
     
     switch(input$dist,
       'Normal distribution' = {
@@ -110,15 +114,11 @@ shinyServer(function(input, output) {
       #       inputId = 'shape2',label = 'q', value = 1
       #     )
       #   )
-      # },
+      # }
     ) # END switch
   }) # END renderUI
   
-  ##############################################################################
-  #                                                                            #
-  #                           Advanced Options                                 #
-  #                                                                            #
-  ##############################################################################
+### Advanced Options                                 
   
   output$option.range <- renderUI({
     # 
@@ -291,12 +291,12 @@ shinyServer(function(input, output) {
     switch(input$dist,
       'Normal distribution' = includeMarkdown("docs/NormalDistribution.md"),
       't-distribution' = includeMarkdown("docs/tDistribution.md"),
-      'Chi-Square' = includeMarkdown(),
-      'F-distribution' = includeMarkdown(),
-      'Exponential distribution' = includeMarkdown(),
-      'Uniform distribution' = includeMarkdown(),
-      'Binomial distribution' = includeMarkdown(),
-      'Poisson distribution' = includeMarkdown()
+      'Chi-Square' = includeMarkdown("docs/ChiSquaredDistribution.md"),
+      'F-distribution' = includeMarkdown("docs/FDistribution.md"),
+      'Exponential distribution' = includeMarkdown("docs/ExponentialDistribution.md"),
+      'Uniform distribution' = includeMarkdown("docs/UniformDistribution.md"),
+      'Binomial distribution' = includeMarkdown("docs/BinomialDistribution.md"),
+      'Poisson distribution' = includeMarkdown("docs/PoissonDistribution.md")
       # 'Log-normal distribution' = 
       # 'Beta distribution' = 
     ) # END switch
