@@ -23,7 +23,14 @@ smoothing.points <- 1001;
 
 ### Begin server ---------------------------------------------------------------
 
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
+  
+  observeEvent(input$dist, {
+    # This function checks, whether the selected distribution is changed by the
+    # users input and disables the drawing of hypothesis areas if so.
+    updateCheckboxInput(session, 'add.checkbox', value=F)
+  })
+  
   output$dist.options <- renderUI({
     # This functions defines which paramaters the user can choose from after
     # selecting a distribution and what values these paramters can take.
@@ -223,42 +230,95 @@ shinyServer(function(input, output) {
         outplot <- grid.arrange(outplot1, outplot2)
       },
       'Exponential distribution' = {
-        outplot <- outplot +
+        outplot1 <- outplot +
           stat_function(fun = dexp, args = list(rate = input$rate), 
-                        geom = geom, n = n)
+                        geom = geom, n = n) +
+          ggtitle("Dichtefunktion der Exponentialverteilung") + 
+          labs(y = paste("Dichte: ", expression(f(x))))
+        outplot2 <- outplot +
+          stat_function(fun = pexp, args = list(rate = input$rate), 
+                        geom = geom, n = n) +
+          ggtitle("Verteilungsfunktion der Exponentialverteilung") + 
+          labs(y = "F(x) = P(X < x)")
+        
+        outplot <- grid.arrange(outplot1, outplot2)
       },
       'Binomial distribution' = {
-        outplot <- outplot +
+        outplot1 <- outplot +
           stat_function(fun = dbinom, args = list(size = input$size, prob = input$prob), 
                         geom = "bar",
-                        n = abs(outputrange[2] - outputrange[1]) + 1)
+                        n = abs(outputrange[2] - outputrange[1]) + 1) +
+          ggtitle("Dichtefunktion der Binomialverteilung")
+        outplot2 <- outplot +
+          stat_function(fun = pbinom, args = list(size = input$size, prob = input$prob), 
+                        geom = "bar",
+                        n = abs(outputrange[2] - outputrange[1]) + 1) +
+          ggtitle("Verteilungsfunktion der Binomialverteilung")
+        
+        outplot <- grid.arrange(outplot1,outplot2)
       },
       'Chi-Square' = {
-        outplot <- outplot + 
+        outplot1 <- outplot + 
           stat_function(fun = dchisq, args = list(df = input$df), 
-                        geom = geom, n = n)
+                        geom = geom, n = n) +
+          ggtitle("Dichtefunktion der Chi-Quadrat-Verteilung")
+        outplot2 <- outplot +
+          stat_function(fun = pchisq, args = list(df = input$df),
+                        geom = geom, n = n) +
+          ggtitle("Verteilungsfuntkion der Chi-Quadrat-Verteilung")
+        
+        outplot <- grid.arrange(outplot1,outplot2)
       },
       'Poisson distribution' = {
-        outplot <- outplot + 
+        outplot1 <- outplot + 
           stat_function(fun = dpois, args = list(lambda = input$lambda), 
                         geom = "bar", 
-                        n = abs(outputrange[2] - outputrange[1]) + 1)
+                        n = abs(outputrange[2] - outputrange[1]) + 1) +
+          ggtitle("Dichtefunktion der Poissonverteilung")
+        outplot2 <- outplot + 
+          stat_function(fun = ppois, args = list(lambda = input$lambda), 
+                        geom = "bar", 
+                        n = abs(outputrange[2] - outputrange[1]) + 1) +
+          ggtitle("Verteilungsfunktion der Poissonverteilung")
+        
+        outplot <- grid.arrange(outplot1,outplot2)
       },
       't-distribution' = {
-        outplot <- outplot + 
+        outplot1 <- outplot + 
           stat_function(fun = dt, args = list(df = input$df), 
-                        geom = geom, n = n)
+                        geom = geom, n = n) +
+          ggtitle("Dichtefunktion der t-Verteilung")
+        outplot2 <- outplot + 
+          stat_function(fun = pt, args = list(df = input$df), 
+                        geom = geom, n = n) +
+          ggtitle("Verteilungsfunktion der t-Verteilung")
+        outplot <- grid.arrange(outplot1,outplot2)
       },
       'F-distribution' = {
-        outplot <- outplot + 
+        outplot1 <- outplot + 
           stat_function(fun = df, args = list(df1 = input$df1, df2 = input$df2), 
-                        geom = geom, n = n)
+                        geom = geom, n = n) + 
+          ggtitle("Dichtefunktion der F-Verteilung")
+        outplot2 <- outplot + 
+          stat_function(fun = pf, args = list(df1 = input$df1, df2 = input$df2), 
+                        geom = geom, n = n) + 
+          ggtitle("Verteilungsfunktion der F-Verteilung")
+        
+        outplot <- grid.arrange(outplot1,outplot2)
       },
       'Uniform distribution' = {
-        outplot <- outplot + 
+        outplot1 <- outplot + 
           stat_function(fun = dunif, args = list(min = input$dist.range[1], 
                                                  max = input$dist.range[2]),
-                        geom = geom, n = n)
+                        geom = geom, n = n) + 
+          ggtitle("Dichtefunktion der Gleichverteilung")
+        outplot2 <- outplot + 
+          stat_function(fun = dunif, args = list(min = input$dist.range[1], 
+                                                 max = input$dist.range[2]),
+                        geom = geom, n = n) + 
+          ggtitle("Verteilungsfunktion der Gleichverteilung")
+        
+        outplot <- grid.arrange(outplot1,outplot2)
       }
   # 'Beta distribution' = {
   #   outplot <- outplot +

@@ -12,10 +12,11 @@ shinyUI(
     ### Header -----------------------------------------------------------------
     
     fluidRow(
-      column(width = 12,
-             column(width = 12, 
-                    titlePanel("Verteilungsfunktionen und Hypothesentests"))),
-      column(width = 11, br())
+      div(id="titlebar","Verteilungsfunktionen und Hypothesentests")#,
+      # column(width = 12,
+      #        column(width = 12, 
+      #               titlePanel("Verteilungsfunktionen und Hypothesentests"))),
+      # column(width = 11, br())
     ),
     sidebarLayout(
       
@@ -40,9 +41,8 @@ shinyUI(
               ), # END fluidRow 
             uiOutput('dist.options'),
             helpText("3. Wähle den gewünschten x-Achsenbereich"),
-            uiOutput('option.range'),
-            fluidRow(actionButton("draw.Plot", strong("Verteilung zeichnen")))
-          ), # END tabPanel "Verteilungen"
+            uiOutput('option.range'))
+          , # END tabPanel "Verteilungen"
           tabPanel("Hypothesentests",
             checkboxInput('add.checkbox', 
                           label = 'Ablehnungsbereich anzeigen', value = F),
@@ -53,16 +53,15 @@ shinyUI(
                          NA, min = 0, max = 1, step = 0.01
             ),
             verbatimTextOutput("crit.value"),
-            br(),
-            fluidRow(actionButton("draw.Plot", strong("Verteilung zeichnen")))
-          ) # END tabPanel "Hypothesentests"
+            br()
+          )), # END tabPanel "Hypothesentests"
           # tabPanel("Weitere Optionen",
           #          fluidRow(
           #            uiOutput('option.geom'),
           #            uiOutput('option.smoothing.points')
           #            )
           #          ) # END tabPanel "Weitere Optionen"
-            ) # END tabsetPanel
+          fluidRow(actionButton("draw.Plot", strong("Verteilung zeichnen"))) # END tabsetPanel
         ), # END sidebarLayout
       
     ### MainPanel --------------------------------------------------------------

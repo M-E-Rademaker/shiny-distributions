@@ -1,17 +1,18 @@
-h2{
+#titlebar{
 	background-color: #063D79;
 	background-image: url("unilogo.png");
 	background-repeat: no-repeat;
 	background-size: contain;
 	min-width: 768px;
+	width: 1920px;
 	align: center;
 	text-align: center;
+	display: table-cell;
 	color: white;
 	vertical-align: middle;
-}
-
-.col-sm-12{
-	background-color: #063D79;
+	font-size: 2em;
+	height: 3em;
+	vertical-align: middle;
 }
 
 .tabbable{
