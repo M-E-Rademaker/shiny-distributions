@@ -1,4 +1,4 @@
-# Distributions and
+# Distributions and hypothesis testing
 
 *Note*: this is work in progress.
 

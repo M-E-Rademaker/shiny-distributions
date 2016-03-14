@@ -7,7 +7,6 @@
 # hypothesis.plot
 # crit.value.calculator
 
-
 ################################################################################
 #                                                                          
 #             Functions used in the server.r file                         

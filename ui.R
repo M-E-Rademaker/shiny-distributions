@@ -19,7 +19,7 @@ shinyUI(
     ),
     sidebarLayout(
       
-    ### Sidebar ----------------------------------------------------------------
+    ### Sidebar panel ----------------------------------------------------------
       
       sidebarPanel(width = 3,
         tabsetPanel(
@@ -42,7 +42,7 @@ shinyUI(
             helpText("3. Wähle den gewünschten x-Achsenbereich"),
             uiOutput('option.range'),
             fluidRow(actionButton("draw.Plot", strong("Verteilung zeichnen")))
-          ),
+          ), # END tabPanel "Verteilungen"
           tabPanel("Hypothesentests",
             checkboxInput('add.checkbox', 
                           label = 'Ablehnungsbereich anzeigen', value = F),
@@ -55,13 +55,13 @@ shinyUI(
             verbatimTextOutput("crit.value"),
             br(),
             fluidRow(actionButton("draw.Plot", strong("Verteilung zeichnen")))
-          ),
-          tabPanel("Weitere Optionen",
-                   fluidRow(
-                     uiOutput('option.geom'),
-                     uiOutput('option.smoothing.points')
-                     )
-                   ) # END tabPanel
+          ) # END tabPanel "Hypothesentests"
+          # tabPanel("Weitere Optionen",
+          #          fluidRow(
+          #            uiOutput('option.geom'),
+          #            uiOutput('option.smoothing.points')
+          #            )
+          #          ) # END tabPanel "Weitere Optionen"
             ) # END tabsetPanel
         ), # END sidebarLayout
       

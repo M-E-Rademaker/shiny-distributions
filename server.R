@@ -131,15 +131,15 @@ shinyServer(function(input, output) {
         return(sI)
     })
   
-  output$option.geom <- renderUI({
-    if (!(input$dist %in% c('Binomial distribution', "Poisson distribution")))
-    selectInput('geom','Stuff', c('line','point','bar'))
-  })
+  # output$option.geom <- renderUI({
+  #   if (!(input$dist %in% c('Binomial distribution', "Poisson distribution")))
+  #   selectInput('geom','Stuff', c('line','point','bar'))
+  # })
   
-  output$option.smoothing.points <- renderUI({
-    if (!(input$dist %in% c('Binomial distribution', "Poisson distribution")))
-      numericInput('n','Smoothing points', smoothing.points)
-  })
+  # output$option.smoothing.points <- renderUI({
+  #   if (!(input$dist %in% c('Binomial distribution', "Poisson distribution")))
+  #     numericInput('n','Smoothing points', smoothing.points)
+  # })
   
   output$crit.value <- renderText({
     if(!is.na(input$hypothesis.los.value)){
@@ -204,12 +204,14 @@ shinyServer(function(input, output) {
                       aes(x))
     switch(input$dist,
       'Normal distribution' = {
+        
         # Density Function
         outplot1 <- outplot + 
           stat_function(fun = dnorm, args = list(mean = input$mu, sd = input$sigma), 
                         geom = geom, n = n) +
           ggtitle("Dichtefunktion der Normalverteilung") + 
           labs(y = paste("Dichte: ", expression(f(x))))
+        
         # Distribution Function
         outplot2 <- outplot + 
           stat_function(fun = pnorm, 
