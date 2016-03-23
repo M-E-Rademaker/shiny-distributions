@@ -12,7 +12,8 @@ shinyUI(
     ### Header -----------------------------------------------------------------
     
     fluidRow(
-      div(id="titlebar","Verteilungsfunktionen und Hypothesentests")#,
+      div(id="titlebar","Verteilungsfunktionen und Hypothesentests"),
+      br()
       # column(width = 12,
       #        column(width = 12, 
       #               titlePanel("Verteilungsfunktionen und Hypothesentests"))),
