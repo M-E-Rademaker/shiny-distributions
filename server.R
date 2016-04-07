@@ -35,7 +35,7 @@ shinyServer(function(input, output, session) {
   Renderer <- eventReactive(input$dist,{
     # This functions defines which paramaters the user can choose from after
     # selecting a distribution and what values these paramters can take.
-    
+    allowed.Ranges <- allowed.Ranges(input)
     switch(
       input$dist,
       'Normalverteilung' = {
@@ -407,7 +407,7 @@ shinyServer(function(input, output, session) {
         # Distribution Function
         outplot2 <- outplot_continuous +
           stat_function(
-            fun = dunif, args = list(
+            fun = punif, args = list(
               min = input$dist.range[1],
               max = input$dist.range[2]
             ),
