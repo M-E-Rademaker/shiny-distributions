@@ -14,10 +14,6 @@ shinyUI(
     fluidRow(
       div(id="titlebar","Verteilungsfunktionen und Hypothesentests"),
       br()
-      # column(width = 12,
-      #        column(width = 12, 
-      #               titlePanel("Verteilungsfunktionen und Hypothesentests"))),
-      # column(width = 11, br())
     ),
     sidebarLayout(
       
@@ -40,9 +36,9 @@ shinyUI(
                             )
                           )
               ), # END fluidRow 
-            uiOutput('dist.options'),
-            helpText("3. Wähle den gewünschten x-Achsenbereich"),
-            uiOutput('option.range'))
+            fluidRow(htmlOutput('dist.options')),
+            fluidRow(helpText("3. Wähle den gewünschten x-Achsenbereich"),
+            uiOutput('option.range')))
           , # END tabPanel "Verteilungen"
           tabPanel("Hypothesentests",
             checkboxInput('add.checkbox', 
@@ -69,8 +65,7 @@ shinyUI(
       
       mainPanel(
         plotOutput('dist.Plot'),
-        br()
-        ,
+        br(),
         uiOutput('dist.Info')
         ) # END mainPanel
     ) # END sidebar layout
