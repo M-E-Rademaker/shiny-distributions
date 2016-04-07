@@ -17,14 +17,14 @@ allowed.Ranges <- function(input) {
   # This functions picks the right default x-axis range for each distribution
   switch(
     input$dist,
-    'Normal distribution' = c(-50, 50, -5, 5),
-    't-distribution' = c(-50, 50, -5, 5),
-    'Chi-Square' = c(0, 100, 0, 5),
-    'F-distribution' = c(0, 50, 0, 5),
-    'Exponential distribution' = c(-1, 100, 0, 5),
-    'Uniform distribution' = c(-50, 50, -5, 5),
-    'Binomial distribution' = c(0, 100, 0, 10),
-    'Poisson distribution' = c(0, 100, 0, 10)
+    'Normalverteilung' = c(-50, 50, -5, 5),
+    't-Verteilung' = c(-50, 50, -5, 5),
+    'Chi-Quadrat-Verteilung' = c(0, 100, 0, 5),
+    'F-Verteilung' = c(0, 50, 0, 5),
+    'Exponentialverteilung' = c(-1, 100, 0, 5),
+    'Stetige Gleichverteilung' = c(-50, 50, -5, 5),
+    'Binomialverteilung' = c(0, 100, 0, 10),
+    'Poisson-Verteilung' = c(0, 100, 0, 10)
     # 'Log-normal distribution' = c(-1, 100, 0, 5),
     # 'Beta distribution' = c(-50, 50, -5, 5)
   )
@@ -60,7 +60,7 @@ border.exp <- function(alpha, rate){
 
 hypothesis.plot <- function(input, smoothing.points) {
   n <- smoothing.points
-  
+  uniblue <- "#063D79"
   if (is.null(input$draw.range)) {
     outputrange <- allowed.Ranges(input)[3:4];
   } else {
@@ -70,7 +70,7 @@ hypothesis.plot <- function(input, smoothing.points) {
   switch(input$test.type,
     'Two-Sided' = {
       return(switch(input$dist,
-        'Normal distribution' = {
+        'Normalverteilung' = {
           border <- c(border.norm(input$hypothesis.los.value/2, input$mu, input$sigma),
                       border.norm(1-input$hypothesis.los.value/2, input$mu, input$sigma));
           sf <- c();
@@ -80,37 +80,37 @@ hypothesis.plot <- function(input, smoothing.points) {
                 fun = limitRange(
                   dnorm, min = outputrange[1], max = border[1], mean = input$mu,
                   sd = input$sigma
-                ), geom = 'area', fill = 'blue', alpha = 0.2 / 9,  n = n
+                ), geom = 'area', fill = uniblue, alpha = 0.2 / 9,  n = n
               ),
               stat_function(
                 fun = limitRange(
                   dnorm, max = outputrange[2], min = border[2], mean = input$mu,
                   sd = input$sigma
-                ), geom = 'area', fill = 'blue', alpha = 0.2 / 9, n = n
+                ), geom = 'area', fill = uniblue, alpha = 0.2 / 9, n = n
               )
             );
         },
-        'Log-normal distribution' = {
-          border <- c(border.lnorm(input$hypothesis.los.value/2, input$mu, input$sigma),
-                      border.lnorm(1-input$hypothesis.los.value/2, input$mu, input$sigma));
-          sf <- c();
-          sf <-
-            cbind(
-              sf, stat_function(
-                fun = limitRange(
-                  dlnorm, min = outputrange[1], max = border[1], meanlog = input$mu,
-                  sdlog = input$sigma
-                ), geom = 'area', fill = 'blue', alpha = 0.2 / 9,  n = n
-              ),
-              stat_function(
-                fun = limitRange(
-                  dlnorm, max = outputrange[2], min = border[2], meanlog = input$mu,
-                  sdlog = input$sigma
-                ), geom = 'area', fill = 'blue', alpha = 0.2 / 9, n = n
-              )
-            );
-        },
-        'Exponential distribution' = {
+        # 'Log-normal distribution' = {
+        #   border <- c(border.lnorm(input$hypothesis.los.value/2, input$mu, input$sigma),
+        #               border.lnorm(1-input$hypothesis.los.value/2, input$mu, input$sigma));
+        #   sf <- c();
+        #   sf <-
+        #     cbind(
+        #       sf, stat_function(
+        #         fun = limitRange(
+        #           dlnorm, min = outputrange[1], max = border[1], meanlog = input$mu,
+        #           sdlog = input$sigma
+        #         ), geom = 'area', fill = 'blue', alpha = 0.2 / 9,  n = n
+        #       ),
+        #       stat_function(
+        #         fun = limitRange(
+        #           dlnorm, max = outputrange[2], min = border[2], meanlog = input$mu,
+        #           sdlog = input$sigma
+        #         ), geom = 'area', fill = 'blue', alpha = 0.2 / 9, n = n
+        #       )
+        #     );
+        # },
+        'Exponentialverteilung' = {
           border <-
             c(border.exp(input$hypothesis.los.value/2, input$rate),
               border.exp(1-input$hypothesis.los.value/2, input$rate))
@@ -152,7 +152,7 @@ hypothesis.plot <- function(input, smoothing.points) {
               )
             );
         },
-        'Binomial distribution' = {
+        'Binomialverteilung' = {
           border <-
             c(
               qbinom((input$hypothesis.los.value / 2), size = input$size, prob = input$prob
@@ -176,7 +176,7 @@ hypothesis.plot <- function(input, smoothing.points) {
               )
             );
         },
-        'Chi-Square' = {
+        'Chi-Quadrat-Verteilung' = {
           border <- c(qchisq((input$hypothesis.los.value / 2), df = input$df),
                       qchisq(1 - (input$hypothesis.los.value / 2), df = input$df))
           sf <- c();
@@ -194,7 +194,7 @@ hypothesis.plot <- function(input, smoothing.points) {
               )
             );
         },
-        'Poisson distribution' = {
+        'Poisson-Verteilung' = {
           border <- c(qpois((input$hypothesis.los.value / 2), lambda = input$lambda),
                       qpois(1 - (input$hypothesis.los.value / 2), lambda = input$lambda))
           sf <- c();
@@ -212,7 +212,7 @@ hypothesis.plot <- function(input, smoothing.points) {
               )
             );
         },
-        't-distribution' = {
+        't-Verteilung' = {
           border <- c(qt((input$hypothesis.los.value / 2), df = input$df), 
                       qt(1 - (input$hypothesis.los.value / 2), df = input$df))
           sf <- c();
@@ -230,7 +230,7 @@ hypothesis.plot <- function(input, smoothing.points) {
               )
             );
         },
-        'F-distribution' = {
+        'F-Verteilung' = {
           border <- c(qf((input$hypothesis.los.value / 2), df1 = input$df1, df2 = input$df2
           ),
           qf(
@@ -254,7 +254,7 @@ hypothesis.plot <- function(input, smoothing.points) {
               )
             );
         },
-        'Uniform distribution' = {
+        'Stetige Gleichverteilung' = {
           border <- c(
             qunif((input$hypothesis.los.value / 2), min = input$dist.range[1],
                   max = input$dist.range[2]
@@ -287,7 +287,7 @@ hypothesis.plot <- function(input, smoothing.points) {
     'Left-Sided' = {
       return(switch(
         input$dist,
-        'Normal distribution' = {
+        'Normalverteilung' = {
           border <- border.norm(input$hypothesis.los.value, input$mu, input$sigma);
           sf <- stat_function(
             fun = limitRange(
@@ -306,7 +306,7 @@ hypothesis.plot <- function(input, smoothing.points) {
             ), geom = 'area', fill = 'blue', alpha = '0.2', n = n
           );
         },
-        'Exponential distribution' = {
+        'Exponentialverteilung' = {
           border <-
             border.exp(input$hypothesis.los.value, input$rate)
           sf <-
@@ -328,7 +328,7 @@ hypothesis.plot <- function(input, smoothing.points) {
             ), geom = 'area', fill = 'blue', alpha = 0.2,  n = n
           );
         },
-        'Binomial distribution' = {
+        'Binomialverteilung' = {
           border <-
             qbinom((input$hypothesis.los.value), size = input$size, prob = input$prob)
           sf <- stat_function(
@@ -337,7 +337,7 @@ hypothesis.plot <- function(input, smoothing.points) {
             ), geom = 'bar', fill = 'blue', alpha = 0.2 / 9,  n = n
           );
         },
-        'Chi-Square' = {
+        'Chi-Quadrat-Verteilung' = {
           border <- qchisq(input$hypothesis.los.value, df = input$df)
           sf <- stat_function(
             fun = limitRange(
@@ -345,7 +345,7 @@ hypothesis.plot <- function(input, smoothing.points) {
             ), geom = 'area', fill = 'blue', alpha = 0.2 / 9,  n = n
           );
         },
-        'Poisson distribution' = {
+        'Poisson-Verteilung' = {
           border <- qpois(input$hypothesis.los.value, lambda = input$lambda)
           sf <- stat_function(
             fun = limitRange(
@@ -355,7 +355,7 @@ hypothesis.plot <- function(input, smoothing.points) {
             geom = 'area', fill = 'blue', alpha = 0.2 / 9,  n = n
           );
         },
-        't-distribution' = {
+        't-Verteilung' = {
           border <- qt(input$hypothesis.los.value, df = input$df)
           sf <- stat_function(
             fun = limitRange(
@@ -365,7 +365,7 @@ hypothesis.plot <- function(input, smoothing.points) {
             geom = 'area', fill = 'blue', alpha = 0.2 / 9,  n = n
           );
         },
-        'F-distribution' = {
+        'F-Verteilung' = {
           border <- qf(input$hypothesis.los.value, df1 = input$df1,
                        df2 = input$df2)
           sf <- stat_function(
@@ -376,7 +376,7 @@ hypothesis.plot <- function(input, smoothing.points) {
             geom = 'area', fill = 'blue', alpha = 0.2 / 9,  n = n
           );
         },
-        'Uniform distribution' = {
+        'Stetige Gleichverteilung' = {
           border <-
             qunif(
               input$hypothesis.los.value, min = input$dist.range[1],
@@ -397,7 +397,7 @@ hypothesis.plot <- function(input, smoothing.points) {
     'Right-Sided' = {
       return(switch(
         input$dist,
-        'Normal distribution' = {
+        'Normalverteilung' = {
           border <-
             border.norm(1-input$hypothesis.los.value, input$mu, input$sigma);
           sf <- stat_function(
@@ -417,7 +417,7 @@ hypothesis.plot <- function(input, smoothing.points) {
             ), geom = 'area', fill = 'blue', alpha = '0.2', n = n
           );
         },
-        'Exponential distribution' = {
+        'Exponentialverteilung' = {
           border <-
             border.exp(1-input$hypothesis.los.value, input$rate)
           sf <-
@@ -439,7 +439,7 @@ hypothesis.plot <- function(input, smoothing.points) {
             ), geom = 'area', fill = 'blue', alpha = 0.2,  n = n
           );
         },
-        'Binomial distribution' = {
+        'Binomialverteilung' = {
           border <-
             qbinom((1 - input$hypothesis.los.value), size = input$size, prob = input$prob)
           sf <- stat_function(
@@ -448,7 +448,7 @@ hypothesis.plot <- function(input, smoothing.points) {
             ), geom = 'bar', fill = 'blue', alpha = 0.2 / 9,  n = n
           );
         },
-        'Chi-Square' = {
+        'Chi-Quadrat-Verteilung' = {
           border <- qchisq(1 - (input$hypothesis.los.value), df = input$df)
           sf <- stat_function(
             fun = limitRange(
@@ -456,7 +456,7 @@ hypothesis.plot <- function(input, smoothing.points) {
             ), geom = 'area', fill = 'blue', alpha = 0.2 / 9, n = n
           );
         },
-        'Poisson distribution' = {
+        'Poisson-Verteilung' = {
           border <-
             qpois(1 - input$hypothesis.los.value, lambda = input$lambda)
           sf <-
@@ -468,7 +468,7 @@ hypothesis.plot <- function(input, smoothing.points) {
               geom = 'area', fill = 'blue', alpha = 0.2 / 9, n = n
             );
         },
-        't-distribution' = {
+        't-Verteilung' = {
           border <- qt(1 - input$hypothesis.los.value, df = input$df)
           sf <-
             stat_function(
@@ -480,7 +480,7 @@ hypothesis.plot <- function(input, smoothing.points) {
               alpha = 0.2 / 9, n = n
             );
         },
-        'F-distribution' = {
+        'F-Verteilung' = {
           border <- qf(1 - input$hypothesis.los.value, df1 = input$df1,
                        df2 = input$df2)
           sf <-
@@ -494,7 +494,7 @@ hypothesis.plot <- function(input, smoothing.points) {
               alpha = 0.2 / 9, n = n
             );
         },
-        'Uniform distribution' = {
+        'Stetige Gleichverteilung' = {
           border <- qunif(
             1 - input$hypothesis.los.value,
             min = input$dist.range[1], max = input$dist.range[2]
@@ -518,7 +518,7 @@ hypothesis.plot <- function(input, smoothing.points) {
 
 crit.value.calculator <- function(input) {
   switch(input$dist,
-         'Normal distribution' = {
+         'Normalverteilung' = {
       switch(
         input$test.type,
         'Two-Sided'={
@@ -564,7 +564,7 @@ crit.value.calculator <- function(input) {
         }
       )
     },
-    'Exponential distribution' = {
+    'Exponentialverteilung' = {
       switch(
         input$test.type,
         'Two-Sided'={
@@ -617,7 +617,7 @@ crit.value.calculator <- function(input) {
         ), "on the right side.");
       });
     },
-    'Binomial distribution' = {
+    'Binomialverteilung' = {
       switch(
         input$test.type,
         'Two-Sided'={
@@ -644,7 +644,7 @@ crit.value.calculator <- function(input) {
           ), "on the right side.");
         });
     },
-    'Chi-Square' = {
+    'Chi-Quadrat-Verteilung' = {
       switch(
         input$test.type,
         'Two-Sided'={
@@ -671,7 +671,7 @@ crit.value.calculator <- function(input) {
           ), "on the right side.");
         });
     },
-    'Poisson distribution' = {
+    'Poisson-Verteilung' = {
       switch(
         input$test.type,
         'Two-Sided'={
@@ -698,7 +698,7 @@ crit.value.calculator <- function(input) {
           ), "on the right side.");
         });
     },
-    't-distribution' = {
+    't-Verteilung' = {
       switch(
         input$test.type,
         'Two-Sided'={
@@ -725,7 +725,7 @@ crit.value.calculator <- function(input) {
           ), "on the right side.");
         });
     },
-    'F-distribution' = {
+    'F-Verteilung' = {
       switch(
         input$test.type,
         'Two-Sided'={
@@ -752,7 +752,7 @@ crit.value.calculator <- function(input) {
           ), "on the right side.");
         });
     },
-    'Uniform distribution' = {
+    'Stetige Gleichverteilung' = {
       switch(
         input$test.type,
         'Two-Sided'={

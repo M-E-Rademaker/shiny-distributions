@@ -29,14 +29,14 @@ shinyUI(
             fluidRow(
               helpText("1. Wähle eine Verteilung"),
               selectInput('dist', NULL, 
-                          c('Normal distribution', 
-                            't-distribution',
-                            'Chi-Square', 
-                            'F-distribution', 
-                            'Exponential distribution',
-                            'Uniform distribution',
-                            'Binomial distribution',
-                            'Poisson distribution'
+                          c('Normalverteilung', 
+                            't-Verteilung',
+                            'Chi-Quadrat-Verteilung', 
+                            'F-Verteilung', 
+                            'Exponentialverteilung',
+                            'Stetige Gleichverteilung',
+                            'Binomialverteilung',
+                            'Poisson-Verteilung'
                             )
                           )
               ), # END fluidRow 
@@ -69,10 +69,10 @@ shinyUI(
       
       mainPanel(
         plotOutput('dist.Plot'),
-        br(), 
-        if (!is.null('dist.Plot')) { 
-          uiOutput('dist.Info')
-          }) # END mainPanel
+        br()
+        ,
+        uiOutput('dist.Info')
+        ) # END mainPanel
     ) # END sidebar layout
   ) # END fluid page
 ) # END shiny ui

@@ -16,11 +16,7 @@ library(gridExtra)
 if (!exists("allowed.Ranges", mode = "function"))
   source("static.R")
 
-### Default values
-
-smoothing.points <- 1001;
-
-
+smoothing.points <- 1001
 ### Begin server ---------------------------------------------------------------
 
 shinyServer(function(input, output, session) {
@@ -36,7 +32,7 @@ shinyServer(function(input, output, session) {
     # selecting a distribution and what values these paramters can take.
     
     switch(input$dist,
-      'Normal distribution' = {
+      'Normalverteilung' = {
         list(
           helpText("2. Wähle die Parameter der Verteilung und klicke", br(),
                    "anschließend auf den", strong("Verteilung zeichnen"), "Button."),
@@ -44,7 +40,7 @@ shinyServer(function(input, output, session) {
           numericInput(inputId = 'sigma', label = 'σ', value = 1, min = 0)
           )
       },
-      't-distribution' = {
+      't-Verteilung' = {
         list(
           helpText("Wähle den Parameter der Verteilung und klicke anschließend
                    auf den", strong("Verteilung zeichnen"), "Button."),
@@ -52,14 +48,14 @@ shinyServer(function(input, output, session) {
             inputId = 'df',label = 'Freiheitsgrade', value = 1, min = 0)
         )
       },
-      'Chi-Square' = {
+      'Chi-Quadrat-Verteilung' = {
         list(
           helpText("Wähle den Parameter der Verteilung und klicke anschließend
                    auf den", strong("Verteilung zeichnen"), "Button."),
           numericInput(inputId = 'df',label = 'Freiheitsgrade', value = 1, min = 0)
         )
       },
-      'F-distribution' = {
+      'F-Verteilung' = {
         list(
           helpText("Wähle die Parameter der Verteilung und klicke anschließend
                    auf den", strong("Verteilung zeichnen"), "Button."),
@@ -69,14 +65,14 @@ shinyServer(function(input, output, session) {
                        value = 5, min = 0)
         )
       },
-      'Exponential distribution' = {
+      'Exponentialverteilung' = {
         list(
           helpText("Wähle den Parameter der Verteilung und klicke anschließend
                    auf den", strong("Verteilung zeichnen"), "Button."),
           numericInput(inputId = 'rate', label = 'λ', value = 1, min = 0, step = 0.5)
           )
       },
-      'Uniform distribution' = {
+      'Stetige Gleichverteilung' = {
         list(
           helpText("Wähle die Parameter der Verteilung und klicke anschließend
                    auf den", strong("Verteilung zeichnen"), "Button."),
@@ -87,7 +83,7 @@ shinyServer(function(input, output, session) {
           )
         )
       },
-      'Binomial distribution' = {
+      'Binomialverteilung' = {
         list(
           helpText("Wähle die Parameter der Verteilung und klicke anschließend
                    auf den", strong("Verteilung zeichnen"), "Button."),
@@ -96,7 +92,7 @@ shinyServer(function(input, output, session) {
                        min = 0, max = 1, step = 0.1)
           )
       },
-      'Poisson distribution' = {
+      'Poisson-Verteilung' = {
         list(
           helpText("Wähle den Parameter der Verteilung und klicke anschließend
                    auf den", strong("Verteilung zeichnen"), "Button."),
@@ -139,21 +135,22 @@ shinyServer(function(input, output, session) {
     })
   
   # output$option.geom <- renderUI({
-  #   if (!(input$dist %in% c('Binomial distribution', "Poisson distribution")))
+  #   if (!(input$dist %in% c('Binomialverteilung', "Poisson-Verteilung")))
   #   selectInput('geom','Stuff', c('line','point','bar'))
   # })
   
   # output$option.smoothing.points <- renderUI({
-  #   if (!(input$dist %in% c('Binomial distribution', "Poisson distribution")))
+  #   if (!(input$dist %in% c('Binomialverteilung', "Poisson-Verteilung")))
   #     numericInput('n','Smoothing points', smoothing.points)
   # })
   
   output$crit.value <- renderText({
     if(!is.na(input$hypothesis.los.value)){
-      return(paste("To a level of significance of", input$hypothesis.los.value,
-                   "the corresponding critical value is", crit.value.calculator(input)))
-    }else{
-      return("No level of significance given.")
+      return(paste("Der kritische Wert für ein Signifikanznvieau von", 
+                   expression("alpha"), "=", input$hypothesis.los.value, "ist:",
+                   crit.value.calculator(input)))
+    } else {
+      return("Kein Signifikanzniveau angegeben")
     }
   })
   
@@ -188,7 +185,7 @@ shinyServer(function(input, output, session) {
     return(op)
   })
   
-### Define the what happens if the user clicks on "Verteilung zeichnen"
+### Define what happens if the user clicks on "Verteilung zeichnen"
   
   nplot <- eventReactive(input$draw.Plot, {
     if (is.null(input$draw.range)) {
@@ -196,31 +193,30 @@ shinyServer(function(input, output, session) {
     } else {
       outputrange <- input$draw.range
     } 
-    if (is.null(input$geom)) {
-      geom <- "line"
-    } else {
-      geom <- input$geom
-    }
-    if (is.null(input$n)) {
-      n <- smoothing.points
-    } else {
-      n <- input$n
-    }
-    outplot <- ggplot(data.frame("x" = seq(outputrange[1], outputrange[2], 
+    
+    geom <- "line"
+    n <- smoothing.points
+    
+    outplot_continuous <- ggplot(data.frame("x" = seq(outputrange[1], outputrange[2], 
                                            abs(outputrange[1] - outputrange[2])/n)), 
                       aes(x))
+    outplot <- ggplot(data.frame("x" = seq(outputrange[1], outputrange[2], 
+                                                      abs(outputrange[1] - outputrange[2])/n)), 
+                                 aes(x))
+    outplot_discrete <- ggplot(data.frame("x" = outputrange[1]:outputrange[2]), aes(x))
+    
     switch(input$dist,
-      'Normal distribution' = {
+      'Normalverteilung' = {
         
         # Density Function
-        outplot1 <- outplot + 
+        outplot1 <- outplot_continuous + 
           stat_function(fun = dnorm, args = list(mean = input$mu, sd = input$sigma), 
                         geom = geom, n = n) +
           ggtitle("Dichtefunktion der Normalverteilung") + 
           labs(y = paste("Dichte: ", expression(f(x))))
         
         # Distribution Function
-        outplot2 <- outplot + 
+        outplot2 <- outplot_continuous + 
           stat_function(fun = pnorm, 
                         args = list(mean = input$mu, sd = input$sigma), 
                         geom = geom, n = n) +
@@ -229,94 +225,133 @@ shinyServer(function(input, output, session) {
         
         outplot <- grid.arrange(outplot1, outplot2)
       },
-      'Exponential distribution' = {
-        outplot1 <- outplot +
+      't-Verteilung' = {
+        
+        # Density Function
+        outplot1 <- outplot_continuous + 
+          stat_function(fun = dt, args = list(df = input$df), 
+                        geom = geom, n = n) +
+          labs(y = paste("Dichte: ", expression(f(x)))) +
+          ggtitle("Dichtefunktion der t-Verteilung")
+        
+        # Distribution Function
+        outplot2 <- outplot_continuous + 
+          stat_function(fun = pt, args = list(df = input$df), 
+                        geom = geom, n = n) +
+          labs(y = "F(x) = P(X < x)") +
+          ggtitle("Verteilungsfunktion der t-Verteilung")
+        
+        outplot <- grid.arrange(outplot1, outplot2)
+      },
+      'Chi-Quadrat-Verteilung' = {
+        
+        # Density Function
+        outplot1 <- outplot_continuous + 
+          stat_function(fun = dchisq, args = list(df = input$df), 
+                        geom = geom, n = n) +
+          labs(y = paste("Dichte: ", expression(f(x)))) +
+          ggtitle("Dichtefunktion der Chi-Quadrat-Verteilung")
+        
+        # Distribution Function
+        outplot2 <- outplot_continuous +
+          stat_function(fun = pchisq, args = list(df = input$df),
+                        geom = geom, n = n) +
+          labs(y = "F(x) = P(X < x)") +
+          ggtitle("Verteilungsfuntkion der Chi-Quadrat-Verteilung")
+        
+        outplot <- grid.arrange(outplot1, outplot2)
+      },
+      'F-Verteilung' = {
+        
+        # Density Function
+        outplot1 <- outplot_continuous + 
+          stat_function(fun = df, args = list(df1 = input$df1, df2 = input$df2), 
+                        geom = geom, n = n) + 
+          labs(y = paste("Dichte: ", expression(f(x)))) +
+          ggtitle("Dichtefunktion der F-Verteilung")
+        
+        # Distribution Function
+        outplot2 <- outplot_continuous + 
+          stat_function(fun = pf, args = list(df1 = input$df1, df2 = input$df2), 
+                        geom = geom, n = n) + 
+          labs(y = "F(x) = P(X < x)") +
+          ggtitle("Verteilungsfunktion der F-Verteilung")
+        
+        outplot <- grid.arrange(outplot1, outplot2)
+      },
+      'Exponentialverteilung' = {
+        
+        # Density Function
+        outplot1 <- outplot_continuous +
           stat_function(fun = dexp, args = list(rate = input$rate), 
                         geom = geom, n = n) +
           ggtitle("Dichtefunktion der Exponentialverteilung") + 
           labs(y = paste("Dichte: ", expression(f(x))))
-        outplot2 <- outplot +
+        
+        # Distribution Function
+        outplot2 <- outplot_continuous +
           stat_function(fun = pexp, args = list(rate = input$rate), 
                         geom = geom, n = n) +
-          ggtitle("Verteilungsfunktion der Exponentialverteilung") + 
-          labs(y = "F(x) = P(X < x)")
+          labs(y = "F(x) = P(X < x)") +
+          ggtitle("Verteilungsfunktion der Exponentialverteilung") 
         
         outplot <- grid.arrange(outplot1, outplot2)
       },
-      'Binomial distribution' = {
-        outplot1 <- outplot +
-          stat_function(fun = dbinom, args = list(size = input$size, prob = input$prob), 
-                        geom = "bar",
-                        n = abs(outputrange[2] - outputrange[1]) + 1) +
-          ggtitle("Dichtefunktion der Binomialverteilung")
-        outplot2 <- outplot +
-          stat_function(fun = pbinom, args = list(size = input$size, prob = input$prob), 
-                        geom = "bar",
-                        n = abs(outputrange[2] - outputrange[1]) + 1) +
+      'Stetige Gleichverteilung' = {
+        
+        # Density Function
+        outplot1 <- outplot_continuous + 
+          stat_function(fun = dunif, args = list(min = input$dist.range[1], 
+                                                 max = input$dist.range[2]),
+                        geom = geom, n = n) + 
+          labs(y = paste("Dichte: ", expression(f(x)))) +
+          ggtitle("Dichtefunktion der Gleichverteilung")
+        
+        # Distribution Function
+        outplot2 <- outplot_continuous + 
+          stat_function(fun = dunif, args = list(min = input$dist.range[1], 
+                                                 max = input$dist.range[2]),
+                        geom = geom, n = n) + 
+          labs(y = "F(x) = P(X < x)") +
+          ggtitle("Verteilungsfunktion der Gleichverteilung")
+        
+        outplot <- grid.arrange(outplot1, outplot2)
+      },
+      'Binomialverteilung' = {
+        outplot1 <- outplot_discrete + 
+          geom_bar(aes(y = dbinom(x, size = input$size, prob = input$prob)), 
+                   stat = "identity",
+                   width = 0.2) + 
+          scale_x_continuous(breaks = seq(outputrange[1], outputrange[2])) +
+          labs(y = paste("Wahrscheinlichkeit: ", expression(p(x)))) +
+          ggtitle("Wahrscheinlichkeitsfunktion der Binomialverteilung")
+        
+        outplot2 <- outplot_discrete  +
+          geom_bar(aes(y = pbinom(x, size = input$size, prob = input$prob)), 
+                   stat = "identity",
+                   width = 0.2) + 
+          scale_x_continuous(breaks = seq(outputrange[1], outputrange[2])) +
+          labs(y = "F(x) = P(X < x)") + 
           ggtitle("Verteilungsfunktion der Binomialverteilung")
         
-        outplot <- grid.arrange(outplot1,outplot2)
+        outplot <- grid.arrange(outplot1, outplot2)
       },
-      'Chi-Square' = {
-        outplot1 <- outplot + 
-          stat_function(fun = dchisq, args = list(df = input$df), 
-                        geom = geom, n = n) +
-          ggtitle("Dichtefunktion der Chi-Quadrat-Verteilung")
-        outplot2 <- outplot +
-          stat_function(fun = pchisq, args = list(df = input$df),
-                        geom = geom, n = n) +
-          ggtitle("Verteilungsfuntkion der Chi-Quadrat-Verteilung")
+      'Poisson-Verteilung' = {
+        outplot1 <- outplot_discrete + 
+          geom_bar(aes(y = dpois(x, lambda = input$lambda)), 
+                   stat = "identity",
+                   width = 0.2) + 
+          scale_x_continuous(breaks = seq(outputrange[1], outputrange[2])) +
+          labs(y = paste("Wahrscheinlichkeit: ", expression(p(x)))) +
+          ggtitle("Wahrscheinlichkeitsfunktion der Poissonverteilung")
         
-        outplot <- grid.arrange(outplot1,outplot2)
-      },
-      'Poisson distribution' = {
-        outplot1 <- outplot + 
-          stat_function(fun = dpois, args = list(lambda = input$lambda), 
-                        geom = "bar", 
-                        n = abs(outputrange[2] - outputrange[1]) + 1) +
-          ggtitle("Dichtefunktion der Poissonverteilung")
-        outplot2 <- outplot + 
-          stat_function(fun = ppois, args = list(lambda = input$lambda), 
-                        geom = "bar", 
-                        n = abs(outputrange[2] - outputrange[1]) + 1) +
+        outplot2 <- outplot_discrete + 
+          geom_bar(aes(y = ppois(x, lambda = input$lambda)), 
+                   stat = "identity",
+                   width = 0.2) + 
+          scale_x_continuous(breaks = seq(outputrange[1], outputrange[2])) +
+          labs(y = paste("Wahrscheinlichkeit: ", expression(p(x)))) +
           ggtitle("Verteilungsfunktion der Poissonverteilung")
-        
-        outplot <- grid.arrange(outplot1,outplot2)
-      },
-      't-distribution' = {
-        outplot1 <- outplot + 
-          stat_function(fun = dt, args = list(df = input$df), 
-                        geom = geom, n = n) +
-          ggtitle("Dichtefunktion der t-Verteilung")
-        outplot2 <- outplot + 
-          stat_function(fun = pt, args = list(df = input$df), 
-                        geom = geom, n = n) +
-          ggtitle("Verteilungsfunktion der t-Verteilung")
-        outplot <- grid.arrange(outplot1,outplot2)
-      },
-      'F-distribution' = {
-        outplot1 <- outplot + 
-          stat_function(fun = df, args = list(df1 = input$df1, df2 = input$df2), 
-                        geom = geom, n = n) + 
-          ggtitle("Dichtefunktion der F-Verteilung")
-        outplot2 <- outplot + 
-          stat_function(fun = pf, args = list(df1 = input$df1, df2 = input$df2), 
-                        geom = geom, n = n) + 
-          ggtitle("Verteilungsfunktion der F-Verteilung")
-        
-        outplot <- grid.arrange(outplot1,outplot2)
-      },
-      'Uniform distribution' = {
-        outplot1 <- outplot + 
-          stat_function(fun = dunif, args = list(min = input$dist.range[1], 
-                                                 max = input$dist.range[2]),
-                        geom = geom, n = n) + 
-          ggtitle("Dichtefunktion der Gleichverteilung")
-        outplot2 <- outplot + 
-          stat_function(fun = dunif, args = list(min = input$dist.range[1], 
-                                                 max = input$dist.range[2]),
-                        geom = geom, n = n) + 
-          ggtitle("Verteilungsfunktion der Gleichverteilung")
         
         outplot <- grid.arrange(outplot1,outplot2)
       }
@@ -345,22 +380,25 @@ shinyServer(function(input, output, session) {
   #                                                                            #
   ##############################################################################
   
-  output$dist.Info <- renderUI({
-    withMathJax(ninfo())
-  })
   
-  ninfo <- eventReactive(input$draw.Plot, {
+  # ninfo <- eventReactive(input$draw.Plot, {
+  ninfo <- eventReactive(input$dist, {
     switch(input$dist,
-      'Normal distribution' = includeMarkdown("docs/NormalDistribution.md"),
-      't-distribution' = includeMarkdown("docs/tDistribution.md"),
-      'Chi-Square' = includeMarkdown("docs/ChiSquaredDistribution.md"),
-      'F-distribution' = includeMarkdown("docs/FDistribution.md"),
-      'Exponential distribution' = includeMarkdown("docs/ExponentialDistribution.md"),
-      'Uniform distribution' = includeMarkdown("docs/UniformDistribution.md"),
-      'Binomial distribution' = includeMarkdown("docs/BinomialDistribution.md"),
-      'Poisson distribution' = includeMarkdown("docs/PoissonDistribution.md")
-      # 'Log-normal distribution' = 
-      # 'Beta distribution' = 
+           'Normalverteilung' = includeMarkdown("docs/NormalDistribution.md"),
+           't-Verteilung' = includeMarkdown("docs/tDistribution.md"),
+           'Chi-Quadrat-Verteilung' = includeMarkdown("docs/ChiSquaredDistribution.md"),
+           'F-Verteilung' = includeMarkdown("docs/FDistribution.md"),
+           'Exponentialverteilung' = includeMarkdown("docs/ExponentialDistribution.md"),
+           'Stetige Gleichverteilung' = includeMarkdown("docs/UniformDistribution.md"),
+           'Binomialverteilung' = includeMarkdown("docs/BinomialDistribution.md"),
+           'Poisson-Verteilung' = includeMarkdown("docs/PoissonDistribution.md")
+           # 'Log-normal distribution' =
+           # 'Beta distribution' =
     ) # END switch
   }) # END eventReactive
+           
+  output$dist.Info <- renderUI({
+    withMathJax(ninfo())
+    
+  }) # renderUI
 }) # END shinyServer
