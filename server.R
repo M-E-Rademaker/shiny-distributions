@@ -381,8 +381,8 @@ shinyServer(function(input, output, session) {
   ##############################################################################
   
   
-  # ninfo <- eventReactive(input$draw.Plot, {
-  ninfo <- eventReactive(input$dist, {
+  ninfo <- eventReactive(input$draw.Plot, {
+  # ninfo <- eventReactive(input$dist, {
     switch(input$dist,
            'Normalverteilung' = includeMarkdown("docs/NormalDistribution.md"),
            't-Verteilung' = includeMarkdown("docs/tDistribution.md"),
@@ -399,6 +399,5 @@ shinyServer(function(input, output, session) {
            
   output$dist.Info <- renderUI({
     withMathJax(ninfo())
-    
   }) # renderUI
 }) # END shinyServer
