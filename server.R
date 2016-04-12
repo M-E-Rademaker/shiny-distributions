@@ -142,51 +142,8 @@ shinyServer(function(input, output, session) {
           )
           )
       }
-      # 'Log-normal distribution' = {
-      #   list(
-      #     helpText("2. Wähle die Parameter der Verteilung und klicke anschließend
-      #              auf den", strong("Verteilung zeichnen"), "Button."),
-      #     numericInput(inputId = 'mu', label = 'μ', value = 0),
-      #     numericInput(inputId = 'sigma', label = 'σ', value = 1, min = 0)
-      #     )
-      # },
-      # 'Beta distribution' = {
-      #   list(
-      #     helpText("Enter the parameters below:"),
-      #     numericInput(
-      #       inputId = 'shape1',label = 'p', value = 1
-      #     ),
-      #     numericInput(
-      #       inputId = 'shape2',label = 'q', value = 1
-      #     )
-      #   )
-      # }
     ) # END switch
     
-    # #   ninfo <- eventReactive(input$draw.Plot, {
-    # 
-    # switch(
-    #   input$dist,
-    #   'Normalverteilung' = md <-
-    #     includeMarkdown("docs/NormalDistribution.md"),
-    #   't-Verteilung' = md <-
-    #     includeMarkdown("docs/tDistribution.md"),
-    #   'Chi-Quadrat-Verteilung' = md <-
-    #     includeMarkdown("docs/ChiSquaredDistribution.md"),
-    #   'F-Verteilung' = md <-
-    #     includeMarkdown("docs/FDistribution.md"),
-    #   'Exponentialverteilung' = md <-
-    #     includeMarkdown("docs/ExponentialDistribution.md"),
-    #   'Stetige Gleichverteilung' = md <-
-    #     includeMarkdown("docs/UniformDistribution.md"),
-    #   'Binomialverteilung' = md <-
-    #     includeMarkdown("docs/BinomialDistribution.md"),
-    #   'Poisson-Verteilung' = md <-
-    #     includeMarkdown("docs/PoissonDistribution.md")
-    #   # 'Log-normal distribution' =
-    #   # 'Beta distribution' =
-    # ) # END switch
-    # return(list(option = option, md = md))
     return(list(option = option))
   }) # END eventReactive
   
@@ -203,16 +160,6 @@ shinyServer(function(input, output, session) {
     )
     return(sI)
   })
-  
-  # output$option.geom <- renderUI({
-  #   if (!(input$dist %in% c('Binomialverteilung', "Poisson-Verteilung")))
-  #   selectInput('geom','Stuff', c('line','point','bar'))
-  # })
-  
-  # output$option.smoothing.points <- renderUI({
-  #   if (!(input$dist %in% c('Binomialverteilung', "Poisson-Verteilung")))
-  #     numericInput('n','Smoothing points', smoothing.points)
-  # })
   
   output$crit.value <- renderText({
     if (!is.na(input$hypothesis.los.value)) {
@@ -479,7 +426,6 @@ shinyServer(function(input, output, session) {
   ##############################################################################
   
   ninfo <- eventReactive(input$draw.Plot, {
-  # ninfo <- eventReactive(input$dist, {
     switch(input$dist,
            'Normalverteilung' = includeMarkdown("docs/NormalDistribution.md"),
            't-Verteilung' = includeMarkdown("docs/tDistribution.md"),
@@ -494,9 +440,5 @@ shinyServer(function(input, output, session) {
 
   output$dist.Info <- renderUI({
     withMathJax(ninfo())
-  
-  # output$dist.Info <- renderUI({
-  #   render <- Renderer()
-  #   return(withMathJax(render$md))
   }) # renderUI
 }) # END shinyServer

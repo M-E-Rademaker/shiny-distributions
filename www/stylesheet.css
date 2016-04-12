@@ -15,6 +15,22 @@
 	vertical-align: middle;
 }
 
+#lehrstuhl{
+  position: absolute;
+  right: 0;
+  top: 80px;
+  color: white;
+  float: right;
+  text-align: right;
+  font-size: 10px;
+  line-height: 0.8;
+}
+
+#lehrstuhl a{
+  text-decoration: none;
+  color:white;
+}
+
 .tabbable{
 	margin: 10px;
 	min-height: 550px;

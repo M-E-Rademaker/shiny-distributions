@@ -4,7 +4,6 @@
 #                                                                            
 ################################################################################
 ### Begin ui -------------------------------------------------------------------
-
 shinyUI(
   fluidPage(
     theme = "stylesheet.css",
@@ -14,7 +13,8 @@ shinyUI(
     fluidRow(
       # div(id="titlebar","Verteilungsfunktionen und Hypothesentests"),
       div(id="titlebar","Verteilungsfunktionen"),
-      br()
+      br(),
+      includeHTML("www/lehrstuhl.html")
     ),
     sidebarLayout(
       
