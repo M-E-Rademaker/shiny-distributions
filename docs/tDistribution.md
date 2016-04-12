@@ -12,19 +12,21 @@ $$ X \sim t(k) \quad\text{mit}\quad k \in \mathbb{R}^{>0}$$
 
 Die t-Verteilung ist eine stetige und symmetrische Verteilung mit $k$ *Freiheitsgraden*.
 Die Form der t-Verteilung ist nur durch die Anzahl der Freiheitsgrade bestimmt.
-Der Erwartungswert und die Varianz sind gegeben durch
+Der Erwartungswert und die Varianz sind gegeben durch:
 
-$$ \text{E}(X) = 0 \quad\quad \text{Var}\left(\frac{k}{k - 2}\right)\quad\text{für}\quad k > 2 $$
+$$ \text{E}(X) = 0 \qquad\text{und}\qquad \text{Var}(X) = \frac{k}{k - 2}\quad\text{für}\quad k > 2 $$
 
-### Dichtefunktion:
+### Dichtefunktion
+
+Die Dichtefunktion ist gegeben durch:
 
 $$ f(x) = \frac{\Gamma\left(\frac{k + 1}{2}\right)}{\sqrt{k\pi}\Gamma\left(\frac{k}{2}\right)}
-\left( 1 + \frac{x^2}{k} \right)^{- \frac{k + 1}{2}} \quad\text{wobei}\quad
-\Gamma(x) = \int^{+\infty}_0 t^{x-1}e^{-t} dt $$
+\left( 1 + \frac{x^2}{k} \right)^{- \frac{k + 1}{2}} $$
 
-Für $k\to\infty$ strebt die t-Verteilung gegen die Standardnormalverteilung, d.h
+wobei $\Gamma(x) = \int^{+\infty}_0 t^{x-1}e^{-t} dt$ die Gammafunktion an der Stelle
+$x$ bezeichnet. Für $k\to\infty$ strebt die t-Verteilung gegen die Standardnormalverteilung, d.h.
 
-$$ t_k \overset{d}{\longrightarrow} NV(0, 1) $$
+$$ t_k \overset{d}{\longrightarrow} N(0, 1) $$
 
 Faustregel: für $k \geq 30$ kann die t-Verteilung relativ gut durch die
 Standardnormalverteilung approximiert werden.
@@ -44,19 +46,65 @@ Die Quantilsfunktion gibt an, welcher Wert (= Quantil $x_0$) zur Wahrscheinlichk
 korrespondiert, dass $p\%$ der Beobachtungen unter diesem Wert liegen. Formal ist
 die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion: 
 
-$$ x = F(p)^{-1} $$
+$$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
 
 ---
 
 ### Excel Befehle
 
-> + **=T.VERT**($x$; $k$; *kumuliert*)
-+ **=T.VERT.RE**($x$; $k$)
-+ **=T.VERT.2S**($x$; $k$)
-+ **=T.INV**($p$; $k$)
-+ **=T.INV.2S**($p$; $k$;)
+#### Dichte- bzw. Verteilungsfunktion der t-Verteilung
 
-Falls 
++ `=T.VERT`($x$; $k$; **kumuliert**)
 
-+ kumuliert = 1: Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)
-+ kumuliert = 0: Wert der Dichtefunktion (**keine** Wahrscheinlichkeit)
+    + $x$ := Ein x-Wert
+    + $k$ := Anzahl Freiheitsgrade
+    + kumuliert = 1 := Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)
+    + kumuliert = 0 := Wert der Dichtefunktion (keine Wahrscheinlichkeit!)
+
+#### Rechte Endfläche der t-Verteilung 
+
++ `=T.VERT.RE`($x$; $k$)
+
+    + $x$ := Ein x-Wert
+    + $k$ := Anzahl Freiheitsgrade
+    
+Die Funktion `T.VERT.RE` berechnet: $P(X \geq x)$
+
+#### Linke und rechte Enfläche der t-Verteilung
+
++ `=T.VERT.2S`($x$; $k$)
+
+    + $x$ := Ein x-Wert
+    + $k$ := Anzahl Freiheitsgrade
+
+Die Funktion `T.VERT.2S` berechnet: $P(|X| \geq x) = P(X \leq -x) + P(X \geq x)$
+
+#### Quantilsfunktion der t-Verteilung
+
++ `=T.INV`($p$; $k$)
+
+    + $p$ := Eine Wahrscheinlichkeit
+    + $k$ := Anzahl Freiheitsgrade
+
+#### Zweiseitige Quantile der t-Verteilung
+
++ `=T.INV.2S`($p$; $k$)
+
+    + $p$ := Eine Wahrscheinlichkeit
+    + $k$ := Anzahl Freiheitsgrade
+    
+Die Funktion `T.INV.2S` berechnet: $x =  F[P(|X| > x)]^{-1}$
+
+----
+
+**Bemerkung**
+
+1.  `T.VERT.RE` = `1 - T.VERT(...; WAHR)`
+1.  `T.VERT.2S` = `2*(1 - T.VERT(...; WAHR))`
+
+denn aufgrund der Symmetrie der t-Verteilung gilt:
+
+$$\begin{align}
+P(X \geq x) &= 1 - P(X \leq x) \\\\
+P(|X| \leq x) &= P(X \leq -x) + P(X \geq x) = 1 - P(X \leq x) + (1 - P(X \leq x)) = 2(1 - P(X \leq x)) 
+\end{align}$$

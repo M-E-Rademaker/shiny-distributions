@@ -1,3 +1,4 @@
+
 ##############################################################################
 #                                                                            #
 #                               Shiny Server                                 #
@@ -461,19 +462,8 @@ shinyServer(function(input, output, session) {
           labs(y = paste("Wahrscheinlichkeit: ", expression(p(x)))) +
           ggtitle("Verteilungsfunktion der Poissonverteilung")
         
-        outplot <- grid.arrange(outplot1,outplot2)
+        outplot <- grid.arrange(outplot1, outplot2)
       }
-      # 'Beta distribution' = {
-      #   outplot <- outplot +
-      #     stat_function(fun = dbeta, args = list(shape1 = input$shape1,
-      #                                            shape2 = input$shape2, ncp = 0),
-      #                   geom = geom, n = n)
-      # },
-      # 'Log-normal distribution' = {
-      #   outplot <- outplot +
-      #     stat_function(fun = dlnorm, args = list(mean = input$mu, sd = sqrt(input$sigma)),
-      #                   geom = geom, n = n)
-      # },
     )
     if (input$add.checkbox) {
       outplot <- grid.arrange(outplot1 + hypothesis.plot(input, n),
@@ -499,8 +489,6 @@ shinyServer(function(input, output, session) {
            'Stetige Gleichverteilung' = includeMarkdown("docs/UniformDistribution.md"),
            'Binomialverteilung' = includeMarkdown("docs/BinomialDistribution.md"),
            'Poisson-Verteilung' = includeMarkdown("docs/PoissonDistribution.md")
-           # 'Log-normal distribution' =
-           # 'Beta distribution' =
     ) # END switch
   }) # END eventReactive
 

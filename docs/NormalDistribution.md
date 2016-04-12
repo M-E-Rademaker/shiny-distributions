@@ -3,20 +3,22 @@ output: html_document
 ---
 
 ***
+
 ## Die Normalverteilung
 
 Schreibweise:
 
 $$ X \sim N(\mu, \sigma^2)$$
 
-Die Normalverteilung ist eine stetige Verteilung mit $\text{E}(X) = \mu$ und 
-$\text{Var}(X) = \sigma^2$.
+Die Normalverteilung ist eine stetige Verteilung mit:
+
+$$ \text{E}(X) = \mu \qquad\text{und}\qquad \text{Var}(X) = \sigma^2 $$
 
 ### Dichtefunktion
 
-Die Dichtefunktion ist definiert als:
+Die Dichtefunktion ist gegeben durch:
 
-$$ f(x) = \frac{1}{\sqrt{2\pi\sigma}}\exp{-\frac{1}{2}\frac{(x - \mu)^2}{\sigma^2}} $$
+$$ f(x) = \frac{1}{\sqrt{2\pi}\sigma}\exp{-\frac{1}{2}\frac{(x - \mu)^2}{\sigma^2}} $$
 
 ### Verteilungsfunktion
 
@@ -33,19 +35,40 @@ Die Quantilsfunktion gibt an, welcher Wert (= Quantil $x_0$) zur Wahrscheinlichk
 korrespondiert, dass $p\%$ der Beobachtungen unter diesem Wert liegen. Formal ist
 die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion: 
 
-$$ x = F(p)^{-1} $$
+$$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
 
 ---
 
 ### Excel Befehle
 
->+ **=NORM.VERT**($x$; $\mu$; $\sigma$; *kumuliert*)
-+ **=NORM.S.VERT**($x$; kumuliert)
-+ **=NORM.INV**($p$; $\mu$; $\sigma$; kumuliert)
-+ **=NORM.S.INV**($p$; $\mu$; $\sigma$; kumuliert)
+#### Dichte- bzw. Verteilungsfunktion der Normalverteilung
 
-Falls 
++ `=NORM.VERT`($x$; $\mu$; $\sigma$; **kumuliert**)
 
-+ kumuliert = 1: Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)
-+ kumuliert = 0: Wert der Dichtefunktion (**keine** Wahrscheinlichkeit)
+    + $x$ := Ein x-Wert
+    + $\mu$ := Der Mittelwert
+    + $\sigma$ := Die Standardabweichung (nicht Varianz!)
+    + kumuliert = 1 := Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)
+    + kumuliert = 0 := Wert der Dichtefunktion (keine Wahrscheinlichkeit!)
 
+#### Dichte- bzw. Verteilungsfunktion der Standardnormalverteilung
+
++ `=NORM.S.VERT`($x$; **kumuliert**)
+
+    + $x$ := Ein x-Wert
+    + kumuliert = 1 := Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)
+    + kumuliert = 0 := Wert der Dichtefunktion (keine Wahrscheinlichkeit!)
+
+#### Quantilsfunktion der Normalverteilung
+
++ `=NORM.INV`($p$; $\mu$; $\sigma$)
+
+    + $p$ := Eine Wahrscheinlichkeit
+    + $\mu$ := Der Mittelwert
+    + $\sigma$ := Die Standardabweichung (nicht Varianz!)
+
+#### Quantilsfunktion der Standardnormalverteilung
+
++ `=NORM.S.INV`($p$)
+
+    + $p$ := Eine Wahrscheinlichkeit

@@ -119,7 +119,8 @@ $(document).ready(function () {
 <p>Die t-Verteilung ist eine stetige und symmetrische Verteilung mit <span class="math inline">\(k\)</span> <em>Freiheitsgraden</em>. Die Form der t-Verteilung ist nur durch die Anzahl der Freiheitsgrade bestimmt. Der Erwartungswert und die Varianz sind gegeben durch</p>
 <p><span class="math display">\[ \text{E}(X) = 0 \quad\quad \text{Var}\left(\frac{k}{k - 2}\right)\quad\text{für}\quad k &gt; 2 \]</span></p>
 <div id="dichtefunktion" class="section level3">
-<h3>Dichtefunktion:</h3>
+<h3>Dichtefunktion</h3>
+<p>Die Dichtefunktion ist gegeben durch:</p>
 <p><span class="math display">\[ f(x) = \frac{\Gamma\left(\frac{k + 1}{2}\right)}{\sqrt{k\pi}\Gamma\left(\frac{k}{2}\right)}
 \left( 1 + \frac{x^2}{k} \right)^{- \frac{k + 1}{2}} \quad\text{wobei}\quad
 \Gamma(x) = \int^{+\infty}_0 t^{x-1}e^{-t} dt \]</span></p>
@@ -130,31 +131,82 @@ $(document).ready(function () {
 <div id="verteilungsfunktion" class="section level3">
 <h3>Verteilungsfunktion</h3>
 <p>Die Verteilungsfunktion ist definiert als:</p>
-<p><span class="math display">\[ F(x) = P(X \leq x) = p = \int^{+\infty}_{-\infty}f(x) dx \]</span></p>
+<p><span class="math display">\[ F(x) = P(X \leq x) = \int^{+\infty}_{-\infty}f(x) dx \]</span></p>
 <p>Der Wert der Verteilungsfunktion gibt an, mit welcher Wahrscheinlichkeit die Zufallsvariable <span class="math inline">\(X\)</span> einen Wert kleiner oder gleich <span class="math inline">\(x\)</span> annimmt.</p>
 </div>
 <div id="quantilsfunktion" class="section level3">
 <h3>Quantilsfunktion</h3>
 <p>Die Quantilsfunktion gibt an, welcher Wert (= Quantil <span class="math inline">\(x_0\)</span>) zur Wahrscheinlichkeit korrespondiert, dass <span class="math inline">\(p\%\)</span> der Beobachtungen unter diesem Wert liegen. Formal ist die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion:</p>
-<p><span class="math display">\[ x = F(p)^{-1} \]</span></p>
+<p><span class="math display">\[ x = F(p)^{-1} = F[P(X \leq x)]^{-1} \]</span></p>
 <hr />
 </div>
 <div id="excel-befehle" class="section level3">
 <h3>Excel Befehle</h3>
-<blockquote>
+<div id="dichte--bzw.-verteilungsfunktion-der-t-verteilung" class="section level4">
+<h4>Dichte- bzw. Verteilungsfunktion der t-Verteilung</h4>
 <ul>
-<li><strong>=T.VERT</strong>(<span class="math inline">\(x\)</span>; <span class="math inline">\(k\)</span>; <em>kumuliert</em>)</li>
-<li><strong>=T.VERT.RE</strong>(<span class="math inline">\(x\)</span>; <span class="math inline">\(k\)</span>)</li>
-<li><strong>=T.VERT.2S</strong>(<span class="math inline">\(x\)</span>; <span class="math inline">\(k\)</span>)</li>
-<li><strong>=T.INV</strong>(<span class="math inline">\(p\)</span>; <span class="math inline">\(k\)</span>)</li>
-<li><strong>=T.INV.2S</strong>(<span class="math inline">\(p\)</span>; <span class="math inline">\(k\)</span>;)</li>
-</ul>
-</blockquote>
-<p>Falls</p>
+<li><p><code>=T.VERT</code>(<span class="math inline">\(x\)</span>; <span class="math inline">\(k\)</span>; <strong>kumuliert</strong>)</p>
 <ul>
-<li>kumuliert = 1: Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)</li>
-<li>kumuliert = 0: Wert der Dichtefunktion (<strong>keine</strong> Wahrscheinlichkeit)</li>
+<li><span class="math inline">\(x\)</span> := Ein x-Wert</li>
+<li><span class="math inline">\(k\)</span> := Anzahl Freiheitsgrade</li>
+<li>kumuliert = 1 := Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)</li>
+<li>kumuliert = 0 := Wert der Dichtefunktion (keine Wahrscheinlichkeit!)</li>
+</ul></li>
 </ul>
+</div>
+<div id="rechte-endflache-der-t-verteilung" class="section level4">
+<h4>Rechte Endfläche der t-Verteilung</h4>
+<ul>
+<li><p><code>=T.VERT.RE</code>(<span class="math inline">\(x\)</span>; <span class="math inline">\(k\)</span>)</p>
+<ul>
+<li><span class="math inline">\(x\)</span> := Ein x-Wert</li>
+<li><span class="math inline">\(k\)</span> := Anzahl Freiheitsgrade</li>
+</ul></li>
+</ul>
+<p>Die Funktion <code>T.VERT.RE</code> berechnet: <span class="math inline">\(P(X \geq x)\)</span></p>
+</div>
+<div id="linke-und-rechte-enflache-der-t-verteilung" class="section level4">
+<h4>Linke und rechte Enfläche der t-Verteilung</h4>
+<ul>
+<li><p><code>=T.VERT.2S</code>(<span class="math inline">\(x\)</span>; <span class="math inline">\(k\)</span>)</p>
+<ul>
+<li><span class="math inline">\(x\)</span> := Ein x-Wert</li>
+<li><span class="math inline">\(k\)</span> := Anzahl Freiheitsgrade</li>
+</ul></li>
+</ul>
+<p>Die Funktion <code>T.VERT.2S</code> berechnet: <span class="math inline">\(P(|X| \geq x) = P(X \leq -x) + P(X \geq x)\)</span></p>
+</div>
+<div id="quantilsfunktion-der-t-verteilung" class="section level4">
+<h4>Quantilsfunktion der t-Verteilung</h4>
+<ul>
+<li><p><code>=T.INV</code>(<span class="math inline">\(p\)</span>, <span class="math inline">\(k\)</span>)</p>
+<ul>
+<li><span class="math inline">\(p\)</span> := Eine Wahrscheinlichkeit</li>
+<li><span class="math inline">\(k\)</span> := Anzahl Freiheitsgrade</li>
+</ul></li>
+</ul>
+</div>
+<div id="zweiseitige-quantile-der-t-verteilung" class="section level4">
+<h4>Zweiseitige Quantile der t-Verteilung</h4>
+<ul>
+<li><p><code>=T.INV.2S</code>(<span class="math inline">\(p\)</span>, <span class="math inline">\(k\)</span>)</p>
+<ul>
+<li><span class="math inline">\(p\)</span> := Eine Wahrscheinlichkeit</li>
+<li><span class="math inline">\(k\)</span> := Anzahl Freiheitsgrade</li>
+</ul></li>
+</ul>
+<p>Die Funktion <code>T.INV.2S</code> berechnet: <span class="math inline">\(x = F[P(|X| &gt; x)]^{-1}\)</span></p>
+<p>Bemerkung: es gilt</p>
+<ol style="list-style-type: decimal">
+<li><code>T.VERT.RE</code> = 1 - <code>T.VERT(...; WAHR)</code></li>
+<li><code>T.VERT.2S</code> = 2*(1 - <code>T.VERT(...; WAHR)</code>)</li>
+</ol>
+<p>denn</p>
+<p><span class="math display">\[\begin{align}
+P(X \geq x) &amp;= 1 - P(X \leq x) \\\\
+P(|X| \leq x) &amp;= P(X \leq -x) + P(X \geq x) = 1 - P(X \leq x) + (1 - P(X \leq x)) = 2(1 - P(X \leq x)) 
+\end{align}\]</span></p>
+</div>
 </div>
 </div>
 

@@ -7,25 +7,29 @@ output: html_document
 ## Die Binomialverteilung
 
 Schreibweise:
+  
+  $$ X \sim \text{B}(n, p) \quad\text{mit}\quad n \in \mathbb{N} \quad\text{und}\quad 0 \leq p \leq 1 $$
+  
+Die Binomialverteilung ist eine diskrete Verteilung mit den Verteilungsparametern $n$ und $p$, wobei $n$ meist als die *Anzahl der "Versuche"* bzw *"Erfolge"* und $p$ als die *Erfolgswahrscheinlichkeit* bezeichnet wird.
+Der Erwartungswert und die Varianz sind:
 
-$$ X \sim \text{B}(n, p) \quad\text{mit}\quad n \in \mathbb{N} 
-\quad\text{und}\quad 0 \leq p \leq 1  $$
+$$ \text{E}(X) = np \qquad\text{und}\qquad \text{Var}(X) = np(1-p) $$
 
-Die Binomialverteilung ist eine diskrete Verteilung mit den Verteilungsparametern
-$n$ := Anzahl der Versuche und $p$ := Erfolgswahrscheinlichkeit.
+### Wahrscheinlichkeitsfunktion
 
-### Wahrscheinlichkeitsfunktion:
+Die Wahrscheinlichkeitsfunktion ist gegeben durch:
 
-$$ p(x) = \begin{cases} \binom{n}{x}p^x (1 - p)^{n-x} & \text{für}\quad x \in \{0,1,2,\dots,n\}\\
+$$ p(x) = \begin{cases} \binom{n}{x}p^x (1 - p)^{n-x} & \text{für}\quad x \in \{0,1,2,\dots,n\} \\\\
 0 & \text{sonst} \end{cases} $$
+  
+mit $x$ := Anzahl der "Treffer".
 
-mit $x$ := Anzahl der "Treffer"
 ### Verteilungsfunktion
 
 Die Verteilungsfunktion ist definiert als:
-
-$$ F(x_m) = P(X \leq x_m) = \sum^{m}_{i = 1}P(X = x_i) $$
-
+  
+  $$ F(x_m) = P(X \leq x_m) = \sum^{m}_{i = 1}P(X = x_i) $$
+  
 wobei $x_m$ die $m$-ten Ausprägung der Zufallsvariablen $X$ in einer geordneten 
 Reihenfolge bezeichnet.
 
@@ -35,20 +39,40 @@ Zufallsvariable $X$ einen Wert kleiner oder gleich $x_m$ annimmt.
 ### Quantilsfunktion
 
 Die Quantilsfunktion gibt an, welcher Wert (= Quantil $x_0$) zur Wahrscheinlichkeit
-korrespondiert, dass $p\%$ der Beobachtungen unter diesem Wert liegen. Formal ist
+korrespondiert, dass $\alpha\%$ der Beobachtungen unter diesem Wert liegen. Formal ist
 die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion: 
-
-$$ x = F(p)^{-1} $$
+  
+  $$ x = F(\alpha)^{-1} = F[P(X \leq x_0)]^{-1} $$
 
 ---
 
 ### Excel Befehle
 
-> + **=BINOM.VERT**($x$; $n$; $p$; *kumuliert*)
-+ **=BINOM.VERT.BEREICH**($n$; $p$; $x_1$; $x_2$)
-+ **=BINOM.INV**($x$; $n$; $p$; *kumuliert*)
+#### Wahrscheinlichkeits- bzw. Verteilungsfunktion der Binomialverteilung
 
-Falls 
++ `=BINOM.VERT`($x$; $n$; $p$; **kumuliert**)
 
-+ kumuliert = 1: Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)
-+ kumuliert = 0: Wert der Dichtefunktion (**keine** Wahrscheinlichkeit)
+    + $x$ := Anzahl "Treffer"
+    + $n$ := Anzahl Versuche
+    + $p$ := Erfolgswahrscheinlichkeit
+    + kumuliert = 1 := Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)
+    + kumuliert = 0 := Wert der Dichtefunktion (keine Wahrscheinlichkeit!)
+
+#### Wahrscheinlichkeitsbereich 
+
++ `=BINOM.VERT.BEREICH`($n$; $p$; $x_1$; $x_2$)
+
+    + $n$ := Anzahl Versuche
+    + $p$ := Erfolgswahrscheinlichkeit
+    + $x_1$ := Untere Grenze
+    + $x_1$ := Obere Grenze
+    
+Die Funktion `BINOM.VERT.BEREICH` berechnet: $P(x_1 \leq X \leq x_2)$
+
+#### Quantilsfunktion der Binomialverteilung
+
++ `=BINOM.INV`($n$; $p$; $\alpha$)
+
+    + $n$ := Anzahl Versuche
+    + $p$ := Erfolgswahrscheinlichkeit
+    + $\alpha$ := Wahrscheinlichkeit
