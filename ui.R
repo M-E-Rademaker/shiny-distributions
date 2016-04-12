@@ -40,19 +40,19 @@ shinyUI(
             fluidRow(htmlOutput('dist.options')),
             fluidRow(helpText("3. Wähle den gewünschten x-Achsenbereich"),
             uiOutput('option.range')))
-          # , # END tabPanel "Verteilungen"
-          # tabPanel("Hypothesentests",
-          #   checkboxInput('add.checkbox', 
-          #                 label = 'Ablehnungsbereich anzeigen', value = F),
-          #   selectInput('test.type','Art des Tests', 
-          #               c('Two-Sided', 'Left-Sided', 'Right-Sided')
-          #   ),
-          #   numericInput("hypothesis.los.value", "Signifikanzniveau", 
-          #                NA, min = 0, max = 1, step = 0.01
-          #   ),
-          #   verbatimTextOutput("crit.value"),
-          #   br()
-          # ) # END tabPanel "Hypothesentests"
+          , # END tabPanel "Verteilungen"
+          tabPanel("Hypothesentests",
+            checkboxInput('add.checkbox',
+                          label = 'Ablehnungsbereich anzeigen', value = F),
+            selectInput('test.type','Art des Tests',
+                        c('Two-Sided', 'Left-Sided', 'Right-Sided')
+            ),
+            numericInput("hypothesis.los.value", "Signifikanzniveau",
+                         NA, min = 0, max = 1, step = 0.01
+            ),
+            verbatimTextOutput("crit.value"),
+            br()
+          ) # END tabPanel "Hypothesentests"
           ),
           # tabPanel("Weitere Optionen",
           #          fluidRow(
