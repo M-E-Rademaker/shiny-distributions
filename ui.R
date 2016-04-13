@@ -13,7 +13,7 @@ shinyUI(
     
     fluidRow(# div(id="titlebar","Verteilungsfunktionen und Hypothesentests"),
       div(id = "spacer",
-        div(id = "titlebar",br(),"Verteilungsfunktionen"),
+        div(id = "titlebar",br(),"Verteilungsfunktionen",br()," "),
         br(),
         includeHTML("www/lehrstuhl.html"),
         tags$head(
