@@ -12,491 +12,886 @@ library(shinythemes)
 library(ggplot2)
 library(gridExtra)
 
-### Source static.r
-
-if (!exists("allowed.Ranges", mode = "function"))
-  source("static.R")
-
-smoothing.points <- 1001
 ### Begin server ---------------------------------------------------------------
 
 shinyServer(function(input, output, session) {
+  
   observeEvent(input$dist, {
     # This function checks, whether the selected distribution is changed by the
-    # users input and disables the drawing of hypothesis areas if so.
-    updateCheckboxInput(session, 'add.checkbox', value = F)
-  })
+    # users input and disables the drawing of the rejection area if so.
+    updateCheckboxInput(session, 'crit.value.checkbox', value = F)
+  }) # END observeEvent
   
-  output$dist.options <- renderUI({
-    render <- Renderer()
-    # print(render$option)
-    return(render$option)
-  }) # END renderUI
+  ### Distributions plots including rejection areas ----------------------------
   
-  Renderer <- eventReactive(input$dist,{
-    # This functions defines which paramaters the user can choose from after
-    # selecting a distribution and what values these paramters can take.
-    allowed.Ranges <- allowed.Ranges(input)
-    switch(
-      input$dist,
-      'Normalverteilung' = {
-        option <- list(
-          helpText(
-            "2. Wähle die Parameter der Verteilung und klicke anschließend 
-            auf den", strong("Verteilung zeichnen"), "Button."
-          ),
-          numericInput(
-            inputId = 'mu', label = 'μ', value = 0
-          ),
-          numericInput(
-            inputId = 'sigma', label = 'σ', value = 1, min = 0
-          )
-        )
-      },
-      't-Verteilung' = {
-        option <- list(
-          helpText(
-            "2. Wähle den Parameter der Verteilung und klicke anschließend
-            auf den", strong("Verteilung zeichnen"), "Button."
-          ),
-          numericInput(
-            inputId = 'df',label = 'Freiheitsgrade', value = 1, min = 0
-          )
-          )
-      },
-      'Chi-Quadrat-Verteilung' = {
-        option <- list(
-          helpText(
-            "2. Wähle den Parameter der Verteilung und klicke anschließend
-            auf den", strong("Verteilung zeichnen"), "Button."
-          ),
-          numericInput(
-            inputId = 'df',label = 'Freiheitsgrade', value = 1, min = 0
-          )
-          )
-      },
-      'F-Verteilung' = {
-        option <- list(
-          helpText(
-            "2. Wähle die Parameter der Verteilung und klicke anschließend
-            auf den", strong("Verteilung zeichnen"), "Button."
-          ),
-          numericInput(
-            inputId = 'df1',label = 'Zählerfreiheitsgrade',
-            value = 10, min = 0
-          ),
-          numericInput(
-            inputId = 'df2',label = 'Nennerfreiheitsgrade',
-            value = 5, min = 0
-          )
-          )
-      },
-      'Exponentialverteilung' = {
-        option <- list(
-          helpText(
-            "2. Wähle den Parameter der Verteilung und klicke anschließend
-            auf den", strong("Verteilung zeichnen"), "Button."
-          ),
-          numericInput(
-            inputId = 'rate', label = 'λ', value = 1, min = 0, step = 0.5
-          )
-          )
-      },
-      'Stetige Gleichverteilung' = {
-        option <- list(
-          helpText(
-            "2. Wähle die Parameter der Verteilung und klicke anschließend
-            auf den", strong("Verteilung zeichnen"), "Button."
-          ),
-          sliderInput(
-            "dist.range", "Unter- und Obergrenze",
-            min = allowed.Ranges[1] + 1,
-            max = allowed.Ranges[2] - 1,
-            value = c(allowed.Ranges[3] + 1, allowed.Ranges[4] - 1)
-          )
-          )
-      },
-      'Binomialverteilung' = {
-        option <- list(
-          helpText(
-            "2. Wähle die Parameter der Verteilung und klicke anschließend
-            auf den", strong("Verteilung zeichnen"), "Button."
-          ),
-          numericInput(
-            inputId = 'size', label = 'n', value = 10
-          ),
-          numericInput(
-            inputId = 'prob', label = 'p', value = 0.5,
-            min = 0, max = 1, step = 0.1
-          )
-          )
-      },
-      'Poisson-Verteilung' = {
-        option <- list(
-          helpText(
-            "2. Wähle den Parameter der Verteilung und klicke anschließend
-            auf den", strong("Verteilung zeichnen"), "Button."
-          ),
-          numericInput(
-            inputId = 'lambda',label = 'λ', value = 1, min = 0, step = 0.5
-          )
-          )
-      }
-      # 'Log-normal distribution' = {
-      #   list(
-      #     helpText("2. Wähle die Parameter der Verteilung und klicke anschließend
-      #              auf den", strong("Verteilung zeichnen"), "Button."),
-      #     numericInput(inputId = 'mu', label = 'μ', value = 0),
-      #     numericInput(inputId = 'sigma', label = 'σ', value = 1, min = 0)
-      #     )
-      # },
-      # 'Beta distribution' = {
-      #   list(
-      #     helpText("Enter the parameters below:"),
-      #     numericInput(
-      #       inputId = 'shape1',label = 'p', value = 1
-      #     ),
-      #     numericInput(
-      #       inputId = 'shape2',label = 'q', value = 1
-      #     )
-      #   )
-      # }
-    ) # END switch
+  output$plot <- renderPlot({
     
-    # #   ninfo <- eventReactive(input$draw.Plot, {
-    # 
-    # switch(
-    #   input$dist,
-    #   'Normalverteilung' = md <-
-    #     includeMarkdown("docs/NormalDistribution.md"),
-    #   't-Verteilung' = md <-
-    #     includeMarkdown("docs/tDistribution.md"),
-    #   'Chi-Quadrat-Verteilung' = md <-
-    #     includeMarkdown("docs/ChiSquaredDistribution.md"),
-    #   'F-Verteilung' = md <-
-    #     includeMarkdown("docs/FDistribution.md"),
-    #   'Exponentialverteilung' = md <-
-    #     includeMarkdown("docs/ExponentialDistribution.md"),
-    #   'Stetige Gleichverteilung' = md <-
-    #     includeMarkdown("docs/UniformDistribution.md"),
-    #   'Binomialverteilung' = md <-
-    #     includeMarkdown("docs/BinomialDistribution.md"),
-    #   'Poisson-Verteilung' = md <-
-    #     includeMarkdown("docs/PoissonDistribution.md")
-    #   # 'Log-normal distribution' =
-    #   # 'Beta distribution' =
-    # ) # END switch
-    # return(list(option = option, md = md))
-    return(list(option = option))
-  }) # END eventReactive
-  
-  ### Advanced Options
-  
-  output$option.range <- renderUI({
-    #
-    allowed.Ranges <- allowed.Ranges(input)
-    sI <- sliderInput(
-      "draw.range", NULL,
-      min = allowed.Ranges[1],
-      max = allowed.Ranges[2],
-      value = c(allowed.Ranges[3], allowed.Ranges[4])
-    )
-    return(sI)
-  })
-  
-  # output$option.geom <- renderUI({
-  #   if (!(input$dist %in% c('Binomialverteilung', "Poisson-Verteilung")))
-  #   selectInput('geom','Stuff', c('line','point','bar'))
-  # })
-  
-  # output$option.smoothing.points <- renderUI({
-  #   if (!(input$dist %in% c('Binomialverteilung', "Poisson-Verteilung")))
-  #     numericInput('n','Smoothing points', smoothing.points)
-  # })
-  
-  output$crit.value <- renderText({
-    if (!is.na(input$hypothesis.los.value)) {
-      return(
-        paste(
-          "Der kritische Wert für ein Signifikanznvieau von",
-          expression("alpha"), "=", input$hypothesis.los.value, "ist:",
-          crit.value.calculator(input)
-        )
-      )
-    } else {
-      return("Kein Signifikanzniveau angegeben")
-    }
-  })
-  
-  ##############################################################################
-  #                                                                            #
-  #                           Plotting Distr.                                  #
-  #                                                                            #
-  ##############################################################################
-  
-  output$dist.Plot <- renderPlot({
-    # This is the part that defines what plot is shown in the mainPanel.
-    # Default is the density and distribution function of the normal distribution
-    # Once the user clicks on the "Verteilung zeichnen" button, nplot is returned
-    if (input$draw.Plot) {
-      op <- nplot()
-    } else {
+    if (!is.null(input$dist)) {
+      
+      uniblue <- "#063D79"
+      
+      switch (input$dist,
+              "Normalverteilung" = {
+                x <- seq(input$axis.norm[1], input$axis.norm[2], length.out = 1000)
+                plotdata <- data.frame("x" = x, 
+                                       "y1" = dnorm(x, mean = input$mu, sd = input$sigma), 
+                                       "y2" = pnorm(x, mean = input$mu, sd = input$sigma))
+                
+                # Density
+                a <- ggplot(plotdata, aes(x, y1)) +
+                  geom_line() + 
+                  ggtitle("Dichtefunktion der Normalverteilung") +
+                  labs(y = "f(x)")
+                  
+                # Distribution function
+                b <- ggplot(plotdata, aes(x, y2)) +
+                  geom_line() +
+                  ggtitle("Verteilungsfunktion der Normalverteilung") +
+                  labs(y = "F(x) = P(X < x)")
+                
+                if (input$crit.value.checkbox) {
+                  
+                  # Critical value
+                  
+                  q_low <- qnorm(input$sig.niveau, mean = input$mu, sd = input$sigma)
+                  q_up <- qnorm(1 - input$sig.niveau, mean = input$mu, sd = input$sigma)
+                  
+                  switch (input$test.type,
+                          "Rechtsseitig" = {
+                            
+                              # shaded density
+                              a <- a + 
+                                geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                                            aes(ymax = y1, ymin = 0), fill = uniblue)
+                              
+                              # shaded distribution function
+                              b <- b +
+                                geom_segment(aes(x = input$axis.norm[1], y = 1 - input$sig.niveau, 
+                                                 xend = q_up, yend = 1 - input$sig.niveau), 
+                                             linetype = "dashed", colour = uniblue) +
+                                geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, xend = q_up, yend = 1), 
+                                             linetype = "dashed", colour = uniblue)  
+                          }, # END Right-Sided
+                          
+                          "Linksseitig" = {
+                            
+                            # shaded density
+                            a <- a +  
+                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue)
+                            
+                            # shaded distribution function
+                            b <- b +
+                              geom_segment(aes(x = input$axis.norm[1], y = input$sig.niveau, 
+                                               xend = q_low, yend = input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_low, y = input$sig.niveau, xend = q_low, yend = 1), 
+                                           linetype = "dashed", colour = uniblue) 
+                          }, # END Left-Sided
+                          
+                          "Zweiseitig" = {
+                            
+                            # shaded density
+                            a <- a +
+                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue) + 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue)
+                            
+                            # shaded distribution function
+                            b <- b +
+                              geom_segment(aes(x = input$axis.norm[1], y = 1 - input$sig.niveau, 
+                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, 
+                                               xend = q_up, yend = 1), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = input$axis.norm[1], y = input$sig.niveau, 
+                                               xend = q_low, yend = input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_low, y = input$sig.niveau, 
+                                               xend = q_low, yend = 1), 
+                                           linetype = "dashed", colour = uniblue) 
+                          } # END Two-Sided
+                  ) # END switch(input$test.type)
+                } # END if statement
+              }, # END Normalverteilung
+              
+              "t-Verteilung" = {
+                x <- seq(input$axis.t[1], input$axis.t[2], length.out = 1000)
+                plotdata <- data.frame("x" = x, 
+                                       "y1" = dt(x, df = input$df.t), 
+                                       "y2" = pt(x, df = input$df.t))
+                
+                # Density
+                a <- ggplot(plotdata, aes(x, y1)) +
+                  geom_line() + 
+                  ggtitle("Dichtefunktion der t-Verteilung") +
+                  labs(y = "f(x)")
+                
+                # Distribution function
+                b <- ggplot(plotdata, aes(x, y2)) +
+                  geom_line() +
+                  ggtitle("Verteilungsfunktion der t-Verteilung") +
+                  labs(y = "F(x) = P(X < x)")
+                
+                if (input$crit.value.checkbox) {
+                  
+                  # Critical value
+                  
+                  q_low <- qt(input$sig.niveau, df = input$df.t)
+                  q_up <- qt(1 - input$sig.niveau, df = input$df.t)
+                  
+                  switch (input$test.type,
+                          "Rechtsseitig" = {
+                            
+                            # shaded density
+                            a <- a + 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue)
+                            
+                            # shaded distribution function
+                            b <- b +
+                              geom_segment(aes(x = input$axis.t[1], y = 1 - input$sig.niveau, 
+                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, xend = q_up, yend = 1), 
+                                           linetype = "dashed", colour = uniblue)  
+                          }, # END Right-Sided
+                          
+                          "Linksseitig" = {
+                            
+                            # shaded density
+                            a <- a +  
+                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue)
+                            
+                            # shaded distribution function
+                            b <- b +
+                              geom_segment(aes(x = input$axis.t[1], y = input$sig.niveau, 
+                                               xend = q_low, yend = input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_low, y = input$sig.niveau, xend = q_low, yend = 1), 
+                                           linetype = "dashed", colour = uniblue) 
+                          }, # END Left-Sided
+                          
+                          "Zweiseitig" = {
+                            
+                            # shaded density
+                            a <- a +
+                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue) + 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue)
+                            
+                            # shaded distribution function
+                            b <- b +
+                              geom_segment(aes(x = input$axis.t[1], y = 1 - input$sig.niveau, 
+                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, 
+                                               xend = q_up, yend = 1), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = input$axis.t[1], y = input$sig.niveau, 
+                                               xend = q_low, yend = input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_low, y = input$sig.niveau, 
+                                               xend = q_low, yend = 1), 
+                                           linetype = "dashed", colour = uniblue) 
+                          } # END Two-Sided
+                  ) # END switch(input$test.type)
+                } # END if statement
+              }, # END t-Verteilung
+              
+              "Chi-Quadrat-Verteilung" = {
+                x <- seq(input$axis.chi[1], input$axis.chi[2], length.out = 1000)
+                plotdata <- data.frame("x" = x, 
+                                       "y1" = dchisq(x, df = input$df.chi), 
+                                       "y2" = pchisq(x, df = input$df.chi))
+                
+                # Density
+                a <- ggplot(plotdata, aes(x, y1)) +
+                  geom_line() + 
+                  ggtitle("Dichtefunktion der Chi-Quadrat-Verteilung") +
+                  labs(y = "f(x)")
+                
+                # Distribution function
+                b <- ggplot(plotdata, aes(x, y2)) +
+                  geom_line() +
+                  ggtitle("Verteilungsfunktion der Chi-Quadrat-Verteilung") +
+                  labs(y = "F(x) = P(X < x)")
+                
+                if (input$crit.value.checkbox) {
+                  
+                  # Critical value
+                  
+                  q_low <- qchisq(input$sig.niveau, df = input$df.chi)
+                  q_up <- qchisq(1 - input$sig.niveau, df = input$df.chi)
+                  
+                  switch (input$test.type,
+                          "Rechtsseitig" = {
+                            
+                            # shaded density
+                            a <- a + 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue)
+                            
+                            # shaded distribution function
+                            b <- b +
+                              geom_segment(aes(x = input$axis.chi[1], y = 1 - input$sig.niveau, 
+                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, xend = q_up, yend = 1), 
+                                           linetype = "dashed", colour = uniblue)  
+                          }, # END Right-Sided
+                          
+                          "Linksseitig" = {
+                            
+                            # shaded density
+                            a <- a +  
+                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue)
+                            
+                            # shaded distribution function
+                            b <- b +
+                              geom_segment(aes(x = input$axis.chi[1], y = input$sig.niveau, 
+                                               xend = q_low, yend = input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_low, y = input$sig.niveau, xend = q_low, yend = 1), 
+                                           linetype = "dashed", colour = uniblue) 
+                          }, # END Left-Sided
+                          
+                          "Zweiseitig" = {
+                            
+                            # shaded density
+                            a <- a +
+                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue) + 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue)
+                            
+                            # shaded distribution function
+                            b <- b +
+                              geom_segment(aes(x = input$axis.chi[1], y = 1 - input$sig.niveau, 
+                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, 
+                                               xend = q_up, yend = 1), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = input$axis.chi[1], y = input$sig.niveau, 
+                                               xend = q_low, yend = input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_low, y = input$sig.niveau, 
+                                               xend = q_low, yend = 1), 
+                                           linetype = "dashed", colour = uniblue) 
+                          } # END Two-Sided
+                  ) # END switch(input$test.type)
+                } # END if statement
+              }, # END Chi-Quadrat-Verteilung
+              
+              "F-Verteilung" = {
+                x <- seq(input$axis.f[1], input$axis.f[2], length.out = 1000)
+                plotdata <- data.frame("x" = x, 
+                                       "y1" = df(x, df1 = input$df1, df2 = input$df2), 
+                                       "y2" = pf(x, df1 = input$df1, df2 = input$df2))
+                
+                # Density
+                a <- ggplot(plotdata, aes(x, y1)) +
+                  geom_line() + 
+                  ggtitle("Dichtefunktion der F-Verteilung") +
+                  labs(y = "f(x)")
+                
+                # Distribution function
+                b <- ggplot(plotdata, aes(x, y2)) +
+                  geom_line() +
+                  ggtitle("Verteilungsfunktion der F-Verteilung") +
+                  labs(y = "F(x) = P(X < x)")
+                
+                if (input$crit.value.checkbox) {
+                  
+                  # Critical value
+                  
+                  q_low <- qf(input$sig.niveau, df1 = input$df1, df2 = input$df2)
+                  q_up <- qf(1 - input$sig.niveau, df1 = input$df1, df2 = input$df2)
+                  
+                  switch (input$test.type,
+                          "Rechtsseitig" = {
+                            
+                            # shaded density
+                            a <- a + 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue)
+                            
+                            # shaded distribution function
+                            b <- b +
+                              geom_segment(aes(x = input$axis.f[1], y = 1 - input$sig.niveau, 
+                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, xend = q_up, yend = 1), 
+                                           linetype = "dashed", colour = uniblue)  
+                          }, # END Right-Sided
+                          
+                          "Linksseitig" = {
+                            
+                            # shaded density
+                            a <- a +  
+                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue)
+                            
+                            # shaded distribution function
+                            b <- b +
+                              geom_segment(aes(x = input$axis.f[1], y = input$sig.niveau, 
+                                               xend = q_low, yend = input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_low, y = input$sig.niveau, xend = q_low, yend = 1), 
+                                           linetype = "dashed", colour = uniblue) 
+                          }, # END Left-Sided
+                          
+                          "Zweiseitig" = {
+                            
+                            # shaded density
+                            a <- a +
+                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue) + 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue)
+                            
+                            # shaded distribution function
+                            b <- b +
+                              geom_segment(aes(x = input$axis.f[1], y = 1 - input$sig.niveau, 
+                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, 
+                                               xend = q_up, yend = 1), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = input$axis.f[1], y = input$sig.niveau, 
+                                               xend = q_low, yend = input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_low, y = input$sig.niveau, 
+                                               xend = q_low, yend = 1), 
+                                           linetype = "dashed", colour = uniblue) 
+                          } # END Two-Sided
+                  ) # END switch(input$test.type)
+                } # END if statement
+              }, # END F-Verteilung
+              
+              "Exponentialverteilung" = {
+                x <- seq(input$axis.exp[1], input$axis.exp[2], length.out = 1000)
+                plotdata <- data.frame("x" = x, 
+                                       "y1" = dexp(x, rate = input$rate), 
+                                       "y2" = pexp(x, rate = input$rate))
+                
+                # Density
+                a <- ggplot(plotdata, aes(x, y1)) +
+                  geom_line() + 
+                  ggtitle("Dichtefunktion der Exponentialverteilung") +
+                  labs(y = "f(x)")
+                
+                # Distribution function
+                b <- ggplot(plotdata, aes(x, y2)) +
+                  geom_line() +
+                  ggtitle("Verteilungsfunktion der Exponentialverteilung") +
+                  labs(y = "F(x) = P(X < x)")
+                
+                if (input$crit.value.checkbox) {
+                  
+                  # Critical value
+                  
+                  q_low <- qexp(input$sig.niveau, rate = input$rate)
+                  q_up <- qexp(1 - input$sig.niveau, rate = input$rate)
+                  
+                  switch (input$test.type,
+                          "Rechtsseitig" = {
+                            
+                            # shaded density
+                            a <- a + 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue)
+                            
+                            # shaded distribution function
+                            b <- b +
+                              geom_segment(aes(x = input$axis.exp[1], y = 1 - input$sig.niveau, 
+                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, xend = q_up, yend = 1), 
+                                           linetype = "dashed", colour = uniblue)  
+                          }, # END Right-Sided
+                          
+                          "Linksseitig" = {
+                            
+                            # shaded density
+                            a <- a +  
+                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue)
+                            
+                            # shaded distribution function
+                            b <- b +
+                              geom_segment(aes(x = input$axis.exp[1], y = input$sig.niveau, 
+                                               xend = q_low, yend = input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_low, y = input$sig.niveau, xend = q_low, yend = 1), 
+                                           linetype = "dashed", colour = uniblue) 
+                          }, # END Left-Sided
+                          
+                          "Zweiseitig" = {
+                            
+                            # shaded density
+                            a <- a +
+                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue) + 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue)
+                            
+                            # shaded distribution function
+                            b <- b +
+                              geom_segment(aes(x = input$axis.exp[1], y = 1 - input$sig.niveau, 
+                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, 
+                                               xend = q_up, yend = 1), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = input$axis.exp[1], y = input$sig.niveau, 
+                                               xend = q_low, yend = input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_low, y = input$sig.niveau, 
+                                               xend = q_low, yend = 1), 
+                                           linetype = "dashed", colour = uniblue) 
+                          } # END Two-Sided
+                  ) # END switch(input$test.type)
+                } # END if statement
+              }, # END Exponentialverteilung
+              
+              "Stetige Gleichverteilung" = {
+                x <- seq(input$axis.cu[1], input$axis.cu[2], length.out = 1000)
+                plotdata <- data.frame("x" = x, 
+                                       "y1" = dunif(x, min = input$axis.updown[1], max = input$axis.updown[2]), 
+                                       "y2" = punif(x, min = input$axis.updown[1], max = input$axis.updown[2]))
+                
+                # Density
+                a <- ggplot(plotdata, aes(x, y1)) +
+                  geom_line() + 
+                  ggtitle("Dichtefunktion der stetigen Gleichverteilung") +
+                  labs(y = "f(x)")
+                
+                # Distribution function
+                b <- ggplot(plotdata, aes(x, y2)) +
+                  geom_line() +
+                  ggtitle("Verteilungsfunktion der stetigen Gleichverteilung") +
+                  labs(y = "F(x) = P(X < x)")
+                
+                if (input$crit.value.checkbox) {
+                  
+                  # Critical value
+                  
+                  q_low <- qunif(input$sig.niveau, min = input$axis.updown[1], max = input$axis.updown[2])
+                  q_up <- qunif(1 - input$sig.niveau, min = input$axis.updown[1], max = input$axis.updown[2])
+                  
+                  switch (input$test.type,
+                          "Rechtsseitig" = {
+                            
+                            # shaded density
+                            a <- a + 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue)
+                            
+                            # shaded distribution function
+                            b <- b +
+                              geom_segment(aes(x = input$axis.cu[1], y = 1 - input$sig.niveau, 
+                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, xend = q_up, yend = 1), 
+                                           linetype = "dashed", colour = uniblue)  
+                          }, # END Right-Sided
+                          
+                          "Linksseitig" = {
+                            
+                            # shaded density
+                            a <- a +  
+                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue)
+                            
+                            # shaded distribution function
+                            b <- b +
+                              geom_segment(aes(x = input$axis.cu[1], y = input$sig.niveau, 
+                                               xend = q_low, yend = input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_low, y = input$sig.niveau, xend = q_low, yend = 1), 
+                                           linetype = "dashed", colour = uniblue) 
+                          }, # END Left-Sided
+                          
+                          "Zweiseitig" = {
+                            
+                            # shaded density
+                            a <- a +
+                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue) + 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                                          aes(ymax = y1, ymin = 0), fill = uniblue)
+                            
+                            # shaded distribution function
+                            b <- b +
+                              geom_segment(aes(x = input$axis.cu[1], y = 1 - input$sig.niveau, 
+                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, 
+                                               xend = q_up, yend = 1), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = input$axis.cu[1], y = input$sig.niveau, 
+                                               xend = q_low, yend = input$sig.niveau), 
+                                           linetype = "dashed", colour = uniblue) +
+                              geom_segment(aes(x = q_low, y = input$sig.niveau, 
+                                               xend = q_low, yend = 1), 
+                                           linetype = "dashed", colour = uniblue) 
+                          } # END Two-Sided
+                  ) # END switch(input$test.type)
+                } # END if statement
+              }, # END stetige Gleichverteilung
+              
+              "Binomialverteilung" = {
+                x <- input$axis.bin[1]:input$axis.bin[2]
+                plotdata <- data.frame("x" = x, 
+                                       "y1" = dbinom(x, size = input$size, prob = input$prop), 
+                                       "y2" = pbinom(x, size = input$size, prob = input$prop))
+                
+                # Density
+                a <- ggplot(plotdata, aes(x, y1)) +
+                  geom_bar(stat = "identity") + 
+                  scale_x_continuous(breaks = input$axis.bin[1]:input$axis.bin[2]) +
+                  ggtitle("Wahrscheinlichkeitsfunktion der Binomialverteilung") + 
+                  labs(y = "Wahrscheinlichkeit: p(x)")
+                
+                # Distribution function
+                b <- ggplot(plotdata, aes(x, y2)) +
+                  geom_step() +
+                  scale_x_continuous(breaks = input$axis.bin[1]:input$axis.bin[2]) +
+                  ggtitle("Verteilungsfunktion der Binomialverteilung") +
+                  labs(y = "F(x) = P(X < x)")
+                
+                if (input$crit.value.checkbox) {
+                  
+                  # Critical value
+                  
+                  q_low <- qbinom(input$sig.niveau, size = input$size, prob = input$prop)
+                  q_up <- qbinom(1 - input$sig.niveau, size = input$size, prob = input$prop)
+                  
+                  switch (input$test.type,
+                          "Rechtsseitig" = {
+                            
+                            # shaded bars 
+                            a <- a + 
+                              geom_bar(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                                       stat="identity", fill = uniblue)
+                              
+                            
+                            # shaded distribution function
+                            # b <- b +
+                            #   geom_segment(aes(x = input$axis.bin[1], y = 1 - input$sig.niveau, 
+                            #                    xend = q_up, yend = 1 - input$sig.niveau), 
+                            #                linetype = "dashed", colour = uniblue)
+                              # geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, xend = q_up, yend = 1), 
+                              #              linetype = "dashed", colour = uniblue)  
+                          }, # END Right-Sided
+                          
+                          "Linksseitig" = {
+                            
+                            # shaded density
+                            a <- a +  
+                              geom_bar(data = subset(plotdata, y2 <= input$sig.niveau), 
+                                          stat="identity", fill = uniblue)
+                            
+                            # shaded distribution function
+                            # b <- b +
+                            #   geom_segment(aes(x = input$axis.t[1], y = input$sig.niveau, 
+                            #                    xend = q_low, yend = input$sig.niveau), 
+                            #                linetype = "dashed", colour = uniblue) +
+                            #   geom_segment(aes(x = q_low, y = input$sig.niveau, xend = q_low, yend = 1), 
+                            #                linetype = "dashed", colour = uniblue) 
+                          }, # END Left-Sided
+                          
+                          "Zweiseitig" = {
+                            
+                            # shaded density
+                            a <- a +
+                              geom_bar(data = subset(plotdata, y2 <= input$sig.niveau | y2 > 1 - input$sig.niveau), 
+                                       stat="identity", fill = uniblue)
+                            
+                            # shaded distribution function
+                            # b <- b +
+                            #   geom_segment(aes(x = input$axis.t[1], y = 1 - input$sig.niveau, 
+                            #                    xend = q_up, yend = 1 - input$sig.niveau), 
+                            #                linetype = "dashed", colour = uniblue) +
+                            #   geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, 
+                            #                    xend = q_up, yend = 1), 
+                            #                linetype = "dashed", colour = uniblue) +
+                            #   geom_segment(aes(x = input$axis.t[1], y = input$sig.niveau, 
+                            #                    xend = q_low, yend = input$sig.niveau), 
+                            #                linetype = "dashed", colour = uniblue) +
+                            #   geom_segment(aes(x = q_low, y = input$sig.niveau, 
+                            #                    xend = q_low, yend = 1), 
+                            #                linetype = "dashed", colour = uniblue) 
+                          } # END Two-Sided
+                  ) # END switch(input$test.type)
+                } # END if statement
+              }, # END Binomialverteilung
+              
+              "Poisson-Verteilung" = {
+                x <- input$axis.pois[1]:input$axis.pois[2]
+                plotdata <- data.frame("x" = x, 
+                                       "y1" = dpois(x, lambda = input$lambda), 
+                                       "y2" = ppois(x, lambda = input$lambda))
+                
+                # Density
+                a <- ggplot(plotdata, aes(x, y1)) +
+                  geom_bar(stat = "identity") + 
+                  scale_x_continuous(breaks = input$axis.pois[1]:input$axis.pois[2]) +
+                  ggtitle("Wahrscheinlichkeitsfunktion der Poisson-Verteilung") + 
+                  labs(y = "Wahrscheinlichkeit: p(x)")
+                
+                # Distribution function
+                b <- ggplot(plotdata, aes(x, y2)) +
+                  geom_step() +
+                  scale_x_continuous(breaks = input$axis.pois[1]:input$axis.pois[2]) +
+                  ggtitle("Verteilungsfunktion der Poisson-Verteilung") +
+                  labs(y = "F(x) = P(X < x)")
+                
+                if (input$crit.value.checkbox) {
+                  
+                  # Critical value
+                  
+                  q_low <- qpois(input$sig.niveau, lambda = input$lambda)
+                  q_up <- qpois(1 - input$sig.niveau, lambda = input$lambda)
+                  
+                  switch (input$test.type,
+                          "Rechtsseitig" = {
+                            
+                            # shaded bars 
+                            a <- a + 
+                              geom_bar(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                                       stat="identity", fill = uniblue)
+                            
+                            
+                            # shaded distribution function
+                            # b <- b +
+                            #   geom_segment(aes(x = input$axis.bin[1], y = 1 - input$sig.niveau, 
+                            #                    xend = q_up, yend = 1 - input$sig.niveau), 
+                            #                linetype = "dashed", colour = uniblue)
+                            # geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, xend = q_up, yend = 1), 
+                            #              linetype = "dashed", colour = uniblue)  
+                          }, # END Right-Sided
+                          
+                          "Linksseitig" = {
+                            
+                            # shaded density
+                            a <- a +  
+                              geom_bar(data = subset(plotdata, y2 <= input$sig.niveau), 
+                                       stat="identity", fill = uniblue)
+                            
+                            # shaded distribution function
+                            # b <- b +
+                            #   geom_segment(aes(x = input$axis.t[1], y = input$sig.niveau, 
+                            #                    xend = q_low, yend = input$sig.niveau), 
+                            #                linetype = "dashed", colour = uniblue) +
+                            #   geom_segment(aes(x = q_low, y = input$sig.niveau, xend = q_low, yend = 1), 
+                            #                linetype = "dashed", colour = uniblue) 
+                          }, # END Left-Sided
+                          
+                          "Zweiseitig" = {
+                            
+                            # shaded density
+                            a <- a +
+                              geom_bar(data = subset(plotdata, y2 <= input$sig.niveau | y2 > 1 - input$sig.niveau), 
+                                       stat="identity", fill = uniblue)
+                            
+                            # shaded distribution function
+                            # b <- b +
+                            #   geom_segment(aes(x = input$axis.t[1], y = 1 - input$sig.niveau, 
+                            #                    xend = q_up, yend = 1 - input$sig.niveau), 
+                            #                linetype = "dashed", colour = uniblue) +
+                            #   geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, 
+                            #                    xend = q_up, yend = 1), 
+                            #                linetype = "dashed", colour = uniblue) +
+                            #   geom_segment(aes(x = input$axis.t[1], y = input$sig.niveau, 
+                            #                    xend = q_low, yend = input$sig.niveau), 
+                            #                linetype = "dashed", colour = uniblue) +
+                            #   geom_segment(aes(x = q_low, y = input$sig.niveau, 
+                            #                    xend = q_low, yend = 1), 
+                            #                linetype = "dashed", colour = uniblue) 
+                          } # END Two-Sided
+                  ) # END switch(input$test.type)
+                } # END if statement
+              } # END Poisson-Verteilung
+              
+      ) # END switch(input$dist)
+      
+    } else { # makes sure that the normal distribution appears at start
+             # so uses "see something" when they acess the page for the first time
+      
       # Density function
-      op1 <- ggplot(data.frame(x = -5:5), aes(x)) +
+      a <- ggplot(data.frame(x = -5:5), aes(x)) +
         stat_function(fun = dnorm) +
         ggtitle("Dichtefunktion der Normalverteilung") +
         labs(y = "f(x)")
       
       # Distribution function
-      op2 <- ggplot(data.frame(x = -5:5), aes(x)) +
+      b <- ggplot(data.frame(x = -5:5), aes(x)) +
         stat_function(fun = pnorm) +
         ggtitle("Verteilungsfunktion der Normalverteilung") +
         labs(y = "F(x) = P(X < x)")
       
-      op <- grid.arrange(op1, op2)
-    }
-    return(op)
-  })
-  
-  ### Define what happens if the user clicks on "Verteilung zeichnen"
-  
-  nplot <- eventReactive(input$draw.Plot, {
-    if (is.null(input$draw.range)) {
-      outputrange <- allowed.Ranges(input)[3:4]
-    } else {
-      outputrange <- input$draw.range
-    }
+    } # END else statement
     
-    geom <- "line"
-    n <- smoothing.points
+    grid.arrange(a, b) # This acutally arranges both plots for the final plot
     
-    outplot_continuous <-
-      ggplot(data.frame("x" = seq(
-        outputrange[1], outputrange[2],
-        abs(outputrange[1] - outputrange[2]) /
-          n
-      )),
-      aes(x))
-    outplot <-
-      ggplot(data.frame("x" = seq(
-        outputrange[1], outputrange[2],
-        abs(outputrange[1] - outputrange[2]) /
-          n
-      )),
-      aes(x))
-    outplot_discrete <-
-      ggplot(data.frame("x" = outputrange[1]:outputrange[2]), aes(x))
-    
-    switch(
-      input$dist,
-      'Normalverteilung' = {
-        # Density Function
-        outplot1 <- outplot_continuous +
-          stat_function(
-            fun = dnorm, args = list(mean = input$mu, sd = input$sigma),
-            geom = geom, n = n
-          ) +
-          ggtitle("Dichtefunktion der Normalverteilung") +
-          labs(y = paste("Dichte: ", expression(f(x))))
-        
-        # Distribution Function
-        outplot2 <- outplot_continuous +
-          stat_function(
-            fun = pnorm,
-            args = list(mean = input$mu, sd = input$sigma),
-            geom = geom, n = n
-          ) +
-          ggtitle("Verteilungsfunktion der Normalverteilung") +
-          labs(y = "F(x) = P(X < x)")
-        
-        outplot <- grid.arrange(outplot1, outplot2)
-      },
-      't-Verteilung' = {
-        # Density Function
-        outplot1 <- outplot_continuous +
-          stat_function(
-            fun = dt, args = list(df = input$df),
-            geom = geom, n = n
-          ) +
-          labs(y = paste("Dichte: ", expression(f(x)))) +
-          ggtitle("Dichtefunktion der t-Verteilung")
-        
-        # Distribution Function
-        outplot2 <- outplot_continuous +
-          stat_function(
-            fun = pt, args = list(df = input$df),
-            geom = geom, n = n
-          ) +
-          labs(y = "F(x) = P(X < x)") +
-          ggtitle("Verteilungsfunktion der t-Verteilung")
-        
-        outplot <- grid.arrange(outplot1, outplot2)
-      },
-      'Chi-Quadrat-Verteilung' = {
-        # Density Function
-        outplot1 <- outplot_continuous +
-          stat_function(
-            fun = dchisq, args = list(df = input$df),
-            geom = geom, n = n
-          ) +
-          labs(y = paste("Dichte: ", expression(f(x)))) +
-          ggtitle("Dichtefunktion der Chi-Quadrat-Verteilung")
-        
-        # Distribution Function
-        outplot2 <- outplot_continuous +
-          stat_function(
-            fun = pchisq, args = list(df = input$df),
-            geom = geom, n = n
-          ) +
-          labs(y = "F(x) = P(X < x)") +
-          ggtitle("Verteilungsfuntkion der Chi-Quadrat-Verteilung")
-        
-        outplot <- grid.arrange(outplot1, outplot2)
-      },
-      'F-Verteilung' = {
-        # Density Function
-        outplot1 <- outplot_continuous +
-          stat_function(
-            fun = df, args = list(df1 = input$df1, df2 = input$df2),
-            geom = geom, n = n
-          ) +
-          labs(y = paste("Dichte: ", expression(f(x)))) +
-          ggtitle("Dichtefunktion der F-Verteilung")
-        
-        # Distribution Function
-        outplot2 <- outplot_continuous +
-          stat_function(
-            fun = pf, args = list(df1 = input$df1, df2 = input$df2),
-            geom = geom, n = n
-          ) +
-          labs(y = "F(x) = P(X < x)") +
-          ggtitle("Verteilungsfunktion der F-Verteilung")
-        
-        outplot <- grid.arrange(outplot1, outplot2)
-      },
-      'Exponentialverteilung' = {
-        # Density Function
-        outplot1 <- outplot_continuous +
-          stat_function(
-            fun = dexp, args = list(rate = input$rate),
-            geom = geom, n = n
-          ) +
-          ggtitle("Dichtefunktion der Exponentialverteilung") +
-          labs(y = paste("Dichte: ", expression(f(x))))
-        
-        # Distribution Function
-        outplot2 <- outplot_continuous +
-          stat_function(
-            fun = pexp, args = list(rate = input$rate),
-            geom = geom, n = n
-          ) +
-          labs(y = "F(x) = P(X < x)") +
-          ggtitle("Verteilungsfunktion der Exponentialverteilung")
-        
-        outplot <- grid.arrange(outplot1, outplot2)
-      },
-      'Stetige Gleichverteilung' = {
-        # Density Function
-        outplot1 <- outplot_continuous +
-          stat_function(
-            fun = dunif, args = list(
-              min = input$dist.range[1],
-              max = input$dist.range[2]
-            ),
-            geom = geom, n = n
-          ) +
-          labs(y = paste("Dichte: ", expression(f(x)))) +
-          ggtitle("Dichtefunktion der Gleichverteilung")
-        
-        # Distribution Function
-        outplot2 <- outplot_continuous +
-          stat_function(
-            fun = punif, args = list(
-              min = input$dist.range[1],
-              max = input$dist.range[2]
-            ),
-            geom = geom, n = n
-          ) +
-          labs(y = "F(x) = P(X < x)") +
-          ggtitle("Verteilungsfunktion der Gleichverteilung")
-        
-        outplot <- grid.arrange(outplot1, outplot2)
-      },
-      'Binomialverteilung' = {
-        outplot1 <- outplot_discrete +
-          geom_bar(aes(y = dbinom(
-            x, size = input$size, prob = input$prob
-          )),
-          stat = "identity",
-          width = 0.2) +
-          scale_x_continuous(breaks = seq(outputrange[1], outputrange[2])) +
-          labs(y = paste("Wahrscheinlichkeit: ", expression(p(x)))) +
-          ggtitle("Wahrscheinlichkeitsfunktion der Binomialverteilung")
-        
-        outplot2 <- outplot_discrete  +
-          geom_bar(aes(y = pbinom(
-            x, size = input$size, prob = input$prob
-          )),
-          stat = "identity",
-          width = 0.2) +
-          scale_x_continuous(breaks = seq(outputrange[1], outputrange[2])) +
-          labs(y = "F(x) = P(X < x)") +
-          ggtitle("Verteilungsfunktion der Binomialverteilung")
-        
-        outplot <- grid.arrange(outplot1, outplot2)
-      },
-      'Poisson-Verteilung' = {
-        outplot1 <- outplot_discrete +
-          geom_bar(aes(y = dpois(x, lambda = input$lambda)),
-                   stat = "identity",
-                   width = 0.2) +
-          scale_x_continuous(breaks = seq(outputrange[1], outputrange[2])) +
-          labs(y = paste("Wahrscheinlichkeit: ", expression(p(x)))) +
-          ggtitle("Wahrscheinlichkeitsfunktion der Poissonverteilung")
-        
-        outplot2 <- outplot_discrete +
-          geom_bar(aes(y = ppois(x, lambda = input$lambda)),
-                   stat = "identity",
-                   width = 0.2) +
-          scale_x_continuous(breaks = seq(outputrange[1], outputrange[2])) +
-          labs(y = paste("Wahrscheinlichkeit: ", expression(p(x)))) +
-          ggtitle("Verteilungsfunktion der Poissonverteilung")
-        
-        outplot <- grid.arrange(outplot1, outplot2)
-      }
-    )
-    if (input$add.checkbox) {
-      outplot <- grid.arrange(outplot1 + hypothesis.plot(input, n),
-                              outplot2)
-    }
-    return(outplot)
-  })
-  
-  ##############################################################################
-  #                                                                            #
-  #                        Distribution Information                            #
-  #                                                                            #
-  ##############################################################################
-  
-  ninfo <- eventReactive(input$draw.Plot, {
-  # ninfo <- eventReactive(input$dist, {
-    switch(input$dist,
-           'Normalverteilung' = includeMarkdown("docs/NormalDistribution.md"),
-           't-Verteilung' = includeMarkdown("docs/tDistribution.md"),
-           'Chi-Quadrat-Verteilung' = includeMarkdown("docs/ChiSquaredDistribution.md"),
-           'F-Verteilung' = includeMarkdown("docs/FDistribution.md"),
-           'Exponentialverteilung' = includeMarkdown("docs/ExponentialDistribution.md"),
-           'Stetige Gleichverteilung' = includeMarkdown("docs/UniformDistribution.md"),
-           'Binomialverteilung' = includeMarkdown("docs/BinomialDistribution.md"),
-           'Poisson-Verteilung' = includeMarkdown("docs/PoissonDistribution.md")
-    ) # END switch
-  }) # END eventReactive
+  }) # END output$plot
 
-  output$dist.Info <- renderUI({
-    withMathJax(ninfo())
+  ### Critical values ----------------------------------------------------------
   
-  # output$dist.Info <- renderUI({
-  #   render <- Renderer()
-  #   return(withMathJax(render$md))
-  }) # renderUI
+  output$crit.value.text <- renderUI({
+    
+    if(input$crit.value.checkbox){
+      
+      seg1 <- paste0("Für ein einen ", strong("Signifikanzniveau"), " von:", 
+                     code(input$sig.niveau), ifelse(input$test.type == "Zweiseitig", 
+                                                        " sind die kritischen Werte der ", 
+                                                        " ist der kritische Werte der ")
+                     , strong(input$dist)) 
+      
+      switch (input$dist,
+              'Normalverteilung' = {
+                
+                param <- paste0(" mit dem Erwartungswert \\(\\mu\\) = ", code(input$mu), 
+                                " und der Standardabweichung \\(\\sigma\\) = ", code(input$sigma))
+                
+              }, # END Normalverteilung
+              't-Verteilung' = {
+                
+                param <- paste0(" mit \\(k\\) = ", code(input$df.t), " Freiheitsgraden")
+                
+              }, # END t-Verteilung
+              'Chi-Quadrat-Verteilung' = {
+                
+                param <- paste0(" mit \\(k\\) = ", code(input$df.chi), " Freiheitsgraden")
+                
+              },
+              'F-Verteilung' = {
+                
+                param <- paste0(" mit \\(k_1\\) = ", code(input$df1), " Zähler", "-", 
+                                " und \\(k_2\\) = ", code(input$df2), " Nennerfreiheitsgraden")
+                
+              },
+              'Exponentialverteilung' = {
+                
+                param <- paste0(" mit \\(\\alpha\\) = ", code(input$rate))
+                
+              },
+              'Stetige Gleichverteilung' = {
+                
+                param <- paste0(" mit der Untergrenze \\(a\\) = ", code(input$axis.updown[1]), 
+                                " und der Obergrenze \\(b\\) = ", code(input$axis.updown[2]))
+                
+              },
+              'Binomialverteilung' = {
+                
+                param <- paste0(" mit \\(n\\) = ", code(input$size), " Versuchen ",
+                                " und Erfolgswahrscheinlichkeit \\(p\\) = ", code(input$prop))
+                
+              },
+              'Poisson-Verteilung' = {
+                
+                param <- paste0(" mit \\(\\lambda\\) = ", code(input$lambda))
+                
+              }
+      ) # END switch dist
+      
+      seg2 <- paste0(" bei einem ", 
+                     strong(ifelse(input$test.type == "Rechtsseitig", "rechtsseitigem", 
+                                   ifelse(input$test.type == "Linksseitig", "linksseitigem", "zweiseitigem"))), 
+                     " Test:")
+      
+      switch (input$dist,
+                          'Normalverteilung' = {
+                            
+                            q_low <- qnorm(input$sig.niveau, mean = input$mu, sd = input$sigma)
+                            q_up <- qnorm(1 - input$sig.niveau, mean = input$mu, sd = input$sigma)
+                            
+                          }, # END Normalverteilung
+                          't-Verteilung' = {
+                            
+                            q_low <- qt(input$sig.niveau, df = input$df.t)
+                            q_up <- qt(1 - input$sig.niveau, df = input$df.t)
+                            
+                          }, # END t-Verteilung
+                          'Chi-Quadrat-Verteilung' = {
+                            
+                            q_low <- qchisq(input$sig.niveau, df = input$df.chi)
+                            q_up <- qchisq(1 - input$sig.niveau, df = input$df.chi)
+                            
+                          }, # END Chi-Quadrat-Verteilung
+                          'F-Verteilung' = {
+                            
+                            q_low <- qf(input$sig.niveau, df1 = input$df1, df2 = input$df2)
+                            q_up <- qf(1 - input$sig.niveau, df1 = input$df1, df2 = input$df2)
+                            
+                          },
+                          'Exponentialverteilung' = {
+                            
+                            q_low <- qexp(input$sig.niveau, rate = input$rate)
+                            q_up <- qexp(1 - input$sig.niveau, rate = input$rate)
+                            
+                          },
+                          'Stetige Gleichverteilung' = {
+                            
+                            q_low <- qunif(input$sig.niveau, min = input$axis.updown[1], max = input$axis.updown[2])
+                            q_up <- qunif(1 - input$sig.niveau, min = input$axis.updown[1], max = input$axis.updown[2])
+                            
+                          },
+                          'Binomialverteilung' = {
+                            
+                            q_low <- qbinom(input$sig.niveau, size = input$size, prob = input$prop)
+                            q_up <- qbinom(1 - input$sig.niveau, size = input$size, prob = input$prop)
+                            
+                          },
+                          'Poisson-Verteilung' = {
+                            
+                            q_low <- qpois(input$sig.niveau, lambda = input$lambda)
+                            q_up <- qpois(1 - input$sig.niveau, lambda = input$lambda)
+                            
+                          }
+      ) # END switch dist
+      
+     crit.val <-  switch (input$test.type,
+              "Rechtsseitig" = {
+                h4(code(round(q_up, 4)))
+              },
+              
+              "Linksseitig" = {
+                h4(code(round(q_low, 4)))
+              },
+              
+              "Zweiseitig" = {
+                paste(h4(code(round(q_low, 4))), " und ", h4(code(round(q_up, 4))))
+              }
+              
+      ) # END switch input$test.type
+      
+      withMathJax(HTML(paste(seg1, param, seg2, crit.val)))
+      
+      } # END if statement
+  }) # END output$crit.value.text
+  
+  ### Distribution Information -------------------------------------------------
+  
+  output$dist.info <- renderUI({
+      withMathJax(switch(input$dist,
+                         'Normalverteilung' = includeMarkdown("docs/NormalDistribution.md"),
+                         't-Verteilung' = includeMarkdown("docs/tDistribution.md"),
+                         'Chi-Quadrat-Verteilung' = includeMarkdown("docs/ChiSquaredDistribution.md"),
+                         'F-Verteilung' = includeMarkdown("docs/FDistribution.md"),
+                         'Exponentialverteilung' = includeMarkdown("docs/ExponentialDistribution.md"),
+                         'Stetige Gleichverteilung' = includeMarkdown("docs/UniformDistribution.md"),
+                         'Binomialverteilung' = includeMarkdown("docs/BinomialDistribution.md"),
+                         'Poisson-Verteilung' = includeMarkdown("docs/PoissonDistribution.md")
+      )) # END switch)
+    }) # END output$dist.info
+  
 }) # END shinyServer

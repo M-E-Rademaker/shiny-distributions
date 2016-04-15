@@ -8,7 +8,7 @@ output: html_document
 
 Schreibweise:
 
-$$ X \sim F(k_1, k_2) \quad\text{mit}\quad k_1, k_2 \in \mathbb{R}^{>0} $$
+$$ X \sim F_{k_1, k_2} \quad\text{mit}\quad k_1, k_2 \in \mathbb{R}^{>0} $$
 
 Die F-Verteilung ist eine stetige Verteilung mit $k_1$ Zähler-
 und $k_2$ *Nennerfreiheitsgraden*. Erwartungswert und Varianz sind gegeben durch:
@@ -31,13 +31,13 @@ Quotient zweier $\chi^2$-verteilten Zufallsvariaben, jeweils geteilt durch deren
 Freiheitsgrade gerade einer F-Verteilung folgt. Die F-Verteilung wird daher meist
 definiert als:
 
-$$ F(k_1, k_2) = \frac{\frac{\chi^2_{k_1}}{k_1}}{\frac{\chi^2_{k_2}}{k_2}} $$
+$$ F_{k_1, k_2} = \frac{\frac{\chi^2_{k_1}}{k_1}}{\frac{\chi^2_{k_2}}{k_2}} $$
 
 ### Verteilungsfunktion
 
 Die Verteilungsfunktion ist definiert als:
 
-$$ F(x) = P(X \leq x) = \int^{+\infty}_{-\infty}f(x) dx $$
+$$ F(x) = P(X \leq x) = \int^{x}_{-\infty}f(x) dx $$
 
 Der Wert der Verteilungsfunktion gibt an, mit welcher Wahrscheinlichkeit die 
 Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.

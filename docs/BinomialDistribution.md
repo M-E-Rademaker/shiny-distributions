@@ -28,13 +28,10 @@ mit $x$ := Anzahl der "Treffer".
 
 Die Verteilungsfunktion ist definiert als:
   
-  $$ F(x_m) = P(X \leq x_m) = \sum^{m}_{i = 1}P(X = x_i) $$
-  
-wobei $x_m$ die $m$-ten Ausprägung der Zufallsvariablen $X$ in einer geordneten 
-Reihenfolge bezeichnet.
+  $$ F(x) = P(X \leq x) = \sum_{x_i < x}P(X = x_i) $$
 
 Der Wert der Verteilungsfunktion gibt an, mit welcher Wahrscheinlichkeit die 
-Zufallsvariable $X$ einen Wert kleiner oder gleich $x_m$ annimmt.
+Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.
 
 ### Quantilsfunktion
 
@@ -56,7 +53,7 @@ die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion:
     + $n$ := Anzahl Versuche
     + $p$ := Erfolgswahrscheinlichkeit
     + kumuliert = 1 := Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)
-    + kumuliert = 0 := Wert der Dichtefunktion (keine Wahrscheinlichkeit!)
+    + kumuliert = 0 := Wert der Wahrscheinlichkeitsfunktion (eine Wahrscheinlichkeit)
 
 #### Wahrscheinlichkeitsbereich 
 

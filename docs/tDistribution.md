@@ -8,7 +8,7 @@ output: html_document
 
 Schreibweise:
 
-$$ X \sim t(k) \quad\text{mit}\quad k \in \mathbb{R}^{>0}$$
+$$ X \sim t_k \quad\text{mit}\quad k \in \mathbb{R}^{>0}$$
 
 Die t-Verteilung ist eine stetige und symmetrische Verteilung mit $k$ *Freiheitsgraden*.
 Die Form der t-Verteilung ist nur durch die Anzahl der Freiheitsgrade bestimmt.
@@ -35,7 +35,7 @@ Standardnormalverteilung approximiert werden.
 
 Die Verteilungsfunktion ist definiert als:
 
-$$ F(x) = P(X \leq x) = \int^{+\infty}_{-\infty}f(x) dx $$
+$$ F(x) = P(X \leq x) = \int^{x}_{-\infty}f(t) dt $$
 
 Der Wert der Verteilungsfunktion gibt an, mit welcher Wahrscheinlichkeit die 
 Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.

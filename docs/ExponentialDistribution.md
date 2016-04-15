@@ -26,7 +26,7 @@ $$ f(x) = \begin{cases} \alpha \exp{-\alpha x} & \text{für}\quad x \geq 0 \\\\
 
 Die Verteilungsfunktion ist definiert als:
 
-$$ F(x) = P(X \leq x) = \int^{+\infty}_{-\infty}f(x) dx $$
+$$ F(x) = P(X \leq x) = \int^{x}_{-\infty}f(t) dt $$
 
 Der Wert der Verteilungsfunktion gibt an, mit welcher Wahrscheinlichkeit die 
 Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.
@@ -51,5 +51,3 @@ $$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
     + $\alpha$ := Verteilungsparameter (in Excel: \alpha =  \lambda)
     + kumuliert = 1 := Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)
     + kumuliert = 0 := Wert der Dichtefunktion (keine Wahrscheinlichkeit!)
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

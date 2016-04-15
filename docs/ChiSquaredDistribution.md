@@ -8,7 +8,7 @@ output: html_document
 
 Schreibweise:
 
-$$ X \sim \chi^2(k) \quad\text{mit}\quad k \in \mathbb{R}^{>0} $$
+$$ X \sim \chi^2_k \quad\text{mit}\quad k \in \mathbb{R}^{>0} $$
 
 Die $\chi^2$-Verteilung ist eine stetige Verteilung mit $k$ *Freiheitsgraden*. 
 Erwartungswert und Varianz sind gegeben durch
@@ -38,7 +38,7 @@ $$ \sum^n_{i = 1} z^2_i \sim \chi^2_k \quad\text{mit}\quad z \sim N(0,1) $$
 
 Die Verteilungsfunktion ist definiert als:
 
-$$ F(x) = P(X \leq x) = \int^{+\infty}_{-\infty}f(x) dx $$
+$$ F(x) = P(X \leq x) = \int^{x}_{-\infty}f(t) dt $$
 
 Der Wert der Verteilungsfunktion gibt an, mit welcher Wahrscheinlichkeit die 
 Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.
