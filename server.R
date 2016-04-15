@@ -9,6 +9,7 @@
 
 library(shiny)
 library(shinythemes)
+library(markdown)
 library(ggplot2)
 library(gridExtra)
 
