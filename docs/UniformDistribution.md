@@ -25,7 +25,7 @@ $$ f(x) = \begin{cases} \frac{1}{b-a} & \text{für}\quad a \leq x \leq b \\\\ 0 
 
 Die Verteilungsfunktion ist definiert als:
 
-$$ F(x_m) = P(X \leq x_m) = \int^{x}_{-\infty}f(x) = \frac{x-a}{b-a} $$
+$$ F(x) = P(X \leq x) = \int^{x}_{-\infty} f(t) dt = \frac{x-a}{b-a} $$
 
 Der Wert der Verteilungsfunktion gibt an, mit welcher Wahrscheinlichkeit die 
 Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.
@@ -42,7 +42,14 @@ $$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
 
 ### Excel Befehle
 
-#### Dichte- bzw. Verteilungsfunktion der stetigen Gleichverteilung
+#### Dichte der stetigen Gleichverteilung
+
++ `=1/(b-a)`
+
+    + $a$ := Untere Grenze
+    + $b$ := Obere Grenze
+
+#### Verteilungsfunktion der stetigen Gleichverteilung
 
 + `=a + (b-a)*ZUFALLSZAHL()`
 

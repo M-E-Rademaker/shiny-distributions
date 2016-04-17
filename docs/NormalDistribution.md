@@ -18,13 +18,13 @@ $$ \text{E}(X) = \mu \qquad\text{und}\qquad \text{Var}(X) = \sigma^2 $$
 
 Die Dichtefunktion ist gegeben durch:
 
-$$ f(x) = \frac{1}{\sqrt{2\pi}\sigma}\exp{-\frac{1}{2}\frac{(x - \mu)^2}{\sigma^2}} $$
+$$ f(x) = \frac{1}{\sqrt{2\pi}\sigma}\exp\left(-\frac{1}{2}\frac{(x - \mu)^2}{\sigma^2}\right) $$
 
 ### Verteilungsfunktion
 
 Die Verteilungsfunktion ist definiert als:
 
-$$ F(x) = P(X \leq x) = \int^{+\infty}_{-\infty}f(x) dx $$
+$$ F(x) = P(X \leq x) = \int^{x}_{-\infty}f(t) dt $$
 
 Der Wert der Verteilungsfunktion gibt an, mit welcher Wahrscheinlichkeit die 
 Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.
