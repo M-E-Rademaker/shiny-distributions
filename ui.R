@@ -46,6 +46,7 @@ shinyUI(
               ), # END fluidRow 
 
             ### Conditonal Panels ----------------------------------------------------------
+            fluidRow(
             conditionalPanel("input.dist == 'Normalverteilung'",
                              helpText("2. Wähle die Parameter der Verteilung."),
                              numericInput(inputId = 'mu', label = 'μ', value = 0), 
@@ -92,6 +93,7 @@ shinyUI(
                              numericInput(inputId = 'lambda',label = 'Lambda', value = 1, min = 0, step = 0.1),
                              helpText("3. Wähle den gewünschten x-Achsenbereich"),
                              sliderInput("axis.pois", label = NULL, min = 0, max = 100, value = c(0, 10)))
+            ) # end fluidRow
           ), # tabPanel
           tabPanel("Hypothesentests",
                    helpText("1. Wähle die Art des Testes"),
