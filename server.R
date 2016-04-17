@@ -807,54 +807,56 @@ shinyServer(function(input, output, session) {
                      strong(ifelse(input$test.type == "Rechtsseitig", "rechtsseitigem", 
                                    ifelse(input$test.type == "Linksseitig", "linksseitigem", "zweiseitigem"))), 
                      " Test:")
+      sig.niveau.local = ifelse(input$test.type == "Zweiseitig", 
+             input$sig.niveau/2, input$sig.niveau)
       
       switch (input$dist,
                           'Normalverteilung' = {
                             
-                            q_low <- qnorm(input$sig.niveau, mean = input$mu, sd = input$sigma)
-                            q_up <- qnorm(1 - input$sig.niveau, mean = input$mu, sd = input$sigma)
+                            q_low <- qnorm(sig.niveau.local, mean = input$mu, sd = input$sigma)
+                            q_up <- qnorm(1 - sig.niveau.local, mean = input$mu, sd = input$sigma)
                             
                           }, # END Normalverteilung
                           't-Verteilung' = {
                             
-                            q_low <- qt(input$sig.niveau, df = input$df.t)
-                            q_up <- qt(1 - input$sig.niveau, df = input$df.t)
+                            q_low <- qt(sig.niveau.local, df = input$df.t)
+                            q_up <- qt(1 - sig.niveau.local, df = input$df.t)
                             
                           }, # END t-Verteilung
                           'Chi-Quadrat-Verteilung' = {
                             
-                            q_low <- qchisq(input$sig.niveau, df = input$df.chi)
-                            q_up <- qchisq(1 - input$sig.niveau, df = input$df.chi)
+                            q_low <- qchisq(sig.niveau.local, df = input$df.chi)
+                            q_up <- qchisq(1 - sig.niveau.local, df = input$df.chi)
                             
                           }, # END Chi-Quadrat-Verteilung
                           'F-Verteilung' = {
                             
-                            q_low <- qf(input$sig.niveau, df1 = input$df1, df2 = input$df2)
-                            q_up <- qf(1 - input$sig.niveau, df1 = input$df1, df2 = input$df2)
+                            q_low <- qf(sig.niveau.local, df1 = input$df1, df2 = input$df2)
+                            q_up <- qf(1 - sig.niveau.local, df1 = input$df1, df2 = input$df2)
                             
                           },
                           'Exponentialverteilung' = {
                             
-                            q_low <- qexp(input$sig.niveau, rate = input$rate)
-                            q_up <- qexp(1 - input$sig.niveau, rate = input$rate)
+                            q_low <- qexp(sig.niveau.local, rate = input$rate)
+                            q_up <- qexp(1 - sig.niveau.local, rate = input$rate)
                             
                           },
                           'Stetige Gleichverteilung' = {
                             
-                            q_low <- qunif(input$sig.niveau, min = input$axis.updown[1], max = input$axis.updown[2])
-                            q_up <- qunif(1 - input$sig.niveau, min = input$axis.updown[1], max = input$axis.updown[2])
+                            q_low <- qunif(sig.niveau.local, min = input$axis.updown[1], max = input$axis.updown[2])
+                            q_up <- qunif(1 - sig.niveau.local, min = input$axis.updown[1], max = input$axis.updown[2])
                             
                           },
                           'Binomialverteilung' = {
                             
-                            q_low <- qbinom(input$sig.niveau, size = input$size, prob = input$prop)
-                            q_up <- qbinom(1 - input$sig.niveau, size = input$size, prob = input$prop)
+                            q_low <- qbinom(sig.niveau.local, size = input$size, prob = input$prop)
+                            q_up <- qbinom(1 - sig.niveau.local, size = input$size, prob = input$prop)
                             
                           },
                           'Poisson-Verteilung' = {
                             
-                            q_low <- qpois(input$sig.niveau, lambda = input$lambda)
-                            q_up <- qpois(1 - input$sig.niveau, lambda = input$lambda)
+                            q_low <- qpois(sig.niveau.local, lambda = input$lambda)
+                            q_up <- qpois(1 - sig.niveau.local, lambda = input$lambda)
                             
                           }
       ) # END switch dist
