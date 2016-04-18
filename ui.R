@@ -99,7 +99,7 @@ shinyUI(
                    helpText("1. Wähle die Art des Testes"),
                    selectInput('test.type', NULL, c('Rechtsseitig', 'Linksseitig', 'Zweiseitig')),
                    helpText("2. Wähle das gewünschte Signifikanzniveau"),
-                   numericInput("sig.niveau", NULL, value = 0.05, max = 1, step = 0.1),
+                   numericInput("sig.niveau", NULL, value = 0.05, min = 0, max = 1, step = 0.1),
                    helpText("3. Ablehnungsbereich einzeichnen ?"),
                    checkboxInput('crit.value.checkbox', label = "Ja", value = F)
           ) # END tabPanel 
