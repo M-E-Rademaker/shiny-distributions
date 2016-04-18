@@ -11,7 +11,7 @@ Schreibweise:
 $$ X \sim \chi^2_k \quad\text{mit}\quad k \in \mathbb{R}^{>0} $$
 
 Die $\chi^2$-Verteilung ist eine stetige Verteilung mit $k$ *Freiheitsgraden*. 
-Erwartungswert und Varianz sind gegeben durch
+Erwartungswert und Varianz sind gegeben durch:
 
 $$ \text{E}(X) = k \qquad\text{und}\qquad \text{Var}(X) = 2k $$
 
@@ -32,7 +32,7 @@ an stochastisch unabhängigen standardnormalverteilten Zufallsvariablen* gerade 
 $\chi^2$ Verteilung mit $k$ Freiheitsgraden folgt. Dabei ist $k$ die Anzahl der Summenglieder. 
 Es gilt daher:
 
-$$ \sum^n_{i = 1} z^2_i \sim \chi^2_k \quad\text{mit}\quad z \sim N(0,1) $$
+$$ \sum^n_{i = 1} z^2_i \sim \chi^2_k \quad\text{mit}\quad z_i \sim N(0,1)\quad\text{und}\quad\text{cor}(x_i,x_j)=0 \forall i\neq j $$
 
 ### Verteilungsfunktion
 
@@ -45,11 +45,10 @@ Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.
 
 ### Quantilsfunktion
 
-Die Quantilsfunktion gibt an, welcher Wert (= Quantil $x_0$) zur Wahrscheinlichkeit
-korrespondiert, dass $p\%$ der Beobachtungen unter diesem Wert liegen. Formal ist
-die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion: 
+Die Quantilsfunktion gibt den Wert zurück $(x_p)$, unterhalb dem p\% der Wahrscheinlichkeitsmasse liegt. 
+Formal ist die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion: 
 
-$$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
+$$ x_p = F(p)^{-1} = F[P(X \leq x_p]^{-1} $$
 
 ---
 
@@ -59,8 +58,8 @@ $$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
 
 + `=CHIQU.VERT`($x$; $k$; **kumuliert**)
 
-    + $x$ := Ein x-Wert
-    + $k$ := Anzahl Zählerfreiheitsgrade
+    + $x$ := Stelle $x$ an der die Funktion ausgewertet werden soll 
+    + $k$ := Anzahl Freiheitsgrade
     + kumuliert = 1 := Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)
     + kumuliert = 0 := Wert der Dichtefunktion (keine Wahrscheinlichkeit!)
 
@@ -68,26 +67,25 @@ $$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
 
 + `=CHIQU.VERT.RE`($x$; $k$)
 
-    + $x$ := Ein x-Wert
-    + $k_1$ := Anzahl Zählerfreiheitsgrade
-    + $k_2$ := Anzahl Nennerfreiheitsgrade
-    
-Die Funktion `CHIQU.VERT.RE` berechnet: $P(X \geq x)$
+    + $x$ := Stelle $x$ an der die Funktion ausgewertet werden soll 
+    + $k$ := Anzahl Freiheitsgrade
+        
+Die Funktion `CHIQU.VERT.RE` berechnet: $P(X \ge x)$
 
 #### Quantilsfunktion der $\chi^2$-Verteilung
 
 + `=CHIQU.INV`($p$; $k_1$; $k_2$)
 
     + $p$ := Eine Wahrscheinlichkeit
-    + $k_1$ := Anzahl Zählerfreiheitsgrade
-    + $k_2$ := Anzahl Nennerfreiheitsgrade
+    + $k$ := Anzahl Freiheitsgrade
+    
 
 #### Zweiseitige Quantile der $\chi^2$-Verteilung
 
 + `=CHIQU.INV.RE`($p$; $k$)
 
     + $p$ := Eine Wahrscheinlichkeit
-    + $k_1$ := Anzahl Zählerfreiheitsgrade
-    + $k_2$ := Anzahl Nennerfreiheitsgrade
+    + $k$ := Anzahl Freiheitsgrade
+   
     
 Die Funktion `CHIUQ.INV.RE` berechnet: $x = F[P(X > x)]^{-1} = F[1 - P(X \leq x)]^{-1}$

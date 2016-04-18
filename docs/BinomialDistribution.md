@@ -10,8 +10,8 @@ Schreibweise:
   
   $$ X \sim \text{B}(n, p) \quad\text{mit}\quad n \in \mathbb{N} \quad\text{und}\quad 0 \leq p \leq 1 $$
   
-Die Binomialverteilung ist eine diskrete Verteilung mit den Verteilungsparametern $n$ und $p$, wobei $n$ meist als die *Anzahl der "Versuche"* bzw *"Erfolge"* und $p$ als die *Erfolgswahrscheinlichkeit* bezeichnet wird.
-Der Erwartungswert und die Varianz sind:
+Die Binomialverteilung ist eine diskrete Verteilung mit den Verteilungsparametern $n$ und $p$, wobei $n$ meist als die *Anzahl der "Versuche"* und $p$ als die *Erfolgswahrscheinlichkeit* bezeichnet wird.
+Der Erwartungswert und die Varianz sind gegeben durch:
 
 $$ \text{E}(X) = np \qquad\text{und}\qquad \text{Var}(X) = np(1-p) $$
 
@@ -19,7 +19,7 @@ $$ \text{E}(X) = np \qquad\text{und}\qquad \text{Var}(X) = np(1-p) $$
 
 Die Wahrscheinlichkeitsfunktion ist gegeben durch:
 
-$$ p(x) = \begin{cases} \binom{n}{x}p^x (1 - p)^{n-x} & \text{für}\quad x \in \{0,1,2,\dots,n\} \\\\
+$$ p(x) = P(X=x) = \begin{cases} \binom{n}{x}p^x (1 - p)^{n-x} & \text{für}\quad x \in \{0,1,2,\dots,n\} \\\\
 0 & \text{sonst} \end{cases} $$
   
 mit $x$ := Anzahl der "Treffer".
@@ -35,11 +35,10 @@ Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.
 
 ### Quantilsfunktion
 
-Die Quantilsfunktion gibt an, welcher Wert (= Quantil $x_0$) zur Wahrscheinlichkeit
-korrespondiert, dass $\alpha\%$ der Beobachtungen unter diesem Wert liegen. Formal ist
-die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion: 
-  
-  $$ x = F(\alpha)^{-1} = F[P(X \leq x_0)]^{-1} $$
+Die Quantilsfunktion gibt den Wert zurück $(x_p)$, unterhalb dem p\% der Wahrscheinlichkeitsmasse liegt. 
+Formal ist die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion:
+
+$$ x_p = F(p)^{-1} = F[P(X \leq x_p)]^{-1} $$
 
 ---
 
@@ -50,7 +49,7 @@ die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion:
 + `=BINOM.VERT`($x$; $n$; $p$; **kumuliert**)
 
     + $x$ := Anzahl "Treffer"
-    + $n$ := Anzahl Versuche
+    + $n$ := Anzahl "Versuche"
     + $p$ := Erfolgswahrscheinlichkeit
     + kumuliert = 1 := Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)
     + kumuliert = 0 := Wert der Wahrscheinlichkeitsfunktion (eine Wahrscheinlichkeit)
@@ -59,7 +58,7 @@ die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion:
 
 + `=BINOM.VERT.BEREICH`($n$; $p$; $x_1$; $x_2$)
 
-    + $n$ := Anzahl Versuche
+    + $n$ := Anzahl "Versuche"
     + $p$ := Erfolgswahrscheinlichkeit
     + $x_1$ := Untere Grenze
     + $x_1$ := Obere Grenze
@@ -70,6 +69,6 @@ Die Funktion `BINOM.VERT.BEREICH` berechnet: $P(x_1 \leq X \leq x_2)$
 
 + `=BINOM.INV`($n$; $p$; $\alpha$)
 
-    + $n$ := Anzahl Versuche
+    + $n$ := Anzahl "Versuche"
     + $p$ := Erfolgswahrscheinlichkeit
     + $\alpha$ := Wahrscheinlichkeit

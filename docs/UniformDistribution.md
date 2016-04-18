@@ -10,8 +10,8 @@ Schreibweise:
 
 $$ X \sim \text{SG}(a, b) \quad\text{mit}\quad a, b \in \mathbb{R}\quad\text{und}\quad a \neq b$$
 
-Die stetige Gleichverteilung hat zwei Verteilungsparameter. Man nennt $a$ die *untere Grenze*
-und $b$ die *obere Grenze*. Der Erwartungswert und die Varianz sind
+Die stetige Gleichverteilung hängt von zwei Verteilungsparameter ab: $a$ die *untere Grenze*
+und $b$ die *obere Grenze*. Der Erwartungswert und die Varianz sind gegeben durch:
 
 $$ \text{E}(X) = \frac{b + a}{2} \qquad\text{und}\qquad \text{Var}(X) = \frac{(b - a)^2}{12} $$
 
@@ -32,11 +32,10 @@ Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.
 
 ### Quantilsfunktion
 
-Die Quantilsfunktion gibt an, welcher Wert (= Quantil $x_0$) zur Wahrscheinlichkeit
-korrespondiert, dass $p\%$ der Beobachtungen unter diesem Wert liegen. Formal ist
-die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion: 
+Die Quantilsfunktion gibt den Wert zurück $(x_p)$, unterhalb dem p\% der Wahrscheinlichkeitsmasse liegt. 
+Formal ist die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion:
 
-$$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
+$$ x_p = F(p)^{-1} = F[P(X \leq x_p)]^{-1} $$
 
 ---
 
@@ -51,9 +50,10 @@ $$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
 
 #### Verteilungsfunktion der stetigen Gleichverteilung
 
-+ `=a + (b-a)*ZUFALLSZAHL()`
++ `=$\frac{x-a}{b-a}$`
 
-    + $a$ := Untere Grenze
+    + $x$ := Stelle $x$ an der die Funktion ausgewertet werden soll 
+		+ $a$ := Untere Grenze
     + $b$ := Obere Grenze
 
 #### Quantilsfunktion der stetigen Gleichverteilung

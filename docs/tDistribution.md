@@ -42,11 +42,10 @@ Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.
 
 ### Quantilsfunktion
 
-Die Quantilsfunktion gibt an, welcher Wert (= Quantil $x_0$) zur Wahrscheinlichkeit
-korrespondiert, dass $p\%$ der Beobachtungen unter diesem Wert liegen. Formal ist
-die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion: 
+Die Quantilsfunktion gibt den Wert zurück $(x_p)$, unterhalb dem p\% der Wahrscheinlichkeitsmasse liegt. 
+Formal ist die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion: 
 
-$$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
+$$ x_p = F(p)^{-1} = F[P(X \leq x_p)]^{-1} $$
 
 ---
 
@@ -56,7 +55,7 @@ $$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
 
 + `=T.VERT`($x$; $k$; **kumuliert**)
 
-    + $x$ := Ein x-Wert
+    + $x$ := Stelle $x$ an der die Funktion ausgewertet werden soll 
     + $k$ := Anzahl Freiheitsgrade
     + kumuliert = 1 := Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)
     + kumuliert = 0 := Wert der Dichtefunktion (keine Wahrscheinlichkeit!)
@@ -74,7 +73,7 @@ Die Funktion `T.VERT.RE` berechnet: $P(X \geq x)$
 
 + `=T.VERT.2S`($x$; $k$)
 
-    + $x$ := Ein x-Wert
+    + $x$ := Stelle $x$ an der die Funktion ausgewertet werden soll
     + $k$ := Anzahl Freiheitsgrade
 
 Die Funktion `T.VERT.2S` berechnet: $P(|X| \geq x) = P(X \leq -x) + P(X \geq x)$
