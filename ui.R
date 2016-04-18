@@ -96,7 +96,7 @@ shinyUI(
             ) # end fluidRow
           ), # tabPanel
           tabPanel("Hypothesentests",
-                   helpText("1. Wähle die Art des Testes"),
+                   helpText("1. Wähle die Art des Tests"),
                    selectInput('test.type', NULL, c('Rechtsseitig', 'Linksseitig', 'Zweiseitig')),
                    helpText("2. Wähle das gewünschte Signifikanzniveau"),
                    numericInput("sig.niveau", NULL, value = 0.05, min = 0, max = 1, step = 0.1),
