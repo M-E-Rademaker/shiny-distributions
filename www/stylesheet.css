@@ -7,21 +7,18 @@
 
 #titlebar{
   border-radius: 4px;
-  box-sizing:border-box;
   width:100%;
+  height:3.5em;
 	background-color: #063D79;
 	background-image: url("unilogo.png");
 	background-repeat: no-repeat;
-	background-size: contain;
+	background-size: auto 90%;
 	background-position: 5px 5px;
-	align: center;
 	text-align: center;
 	/* display: table-cell; */
 	color: white;
 	vertical-align: middle;
 	font-size: 2em;
-	height: 3.5em;
-	vertical-align: middle;
 	padding: 5px;
 	line-height: 1;
 }
