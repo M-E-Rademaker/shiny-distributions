@@ -574,15 +574,15 @@ shinyServer(function(input, output, session) {
                   
                   # Critical value
                   
-                  q_low <- qbinom(sig.niveau.local.local, size = input$size, prob = input$prop)
-                  q_up <- qbinom(1 - sig.niveau.local.local, size = input$size, prob = input$prop)
+                  q_low <- qbinom(sig.niveau.local, size = input$size, prob = input$prop)
+                  q_up <- qbinom(1 - sig.niveau.local, size = input$size, prob = input$prop)
                   
                   switch (input$test.type,
                           "Rechtsseitig" = {
                             
                             # shaded bars 
                             a <- a + 
-                              geom_bar(data = subset(plotdata, y2 > 1 - sig.niveau.local.local), 
+                              geom_bar(data = subset(plotdata, y2 > 1 - sig.niveau.local), 
                                        stat="identity", fill = uniblue)
                               
                           }, # END Right-Sided
