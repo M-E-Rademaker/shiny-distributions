@@ -844,6 +844,6 @@ shinyServer(function(input, output, session) {
                          'Stetige Gleichverteilung' = includeMarkdown("docs/UniformDistribution.md"),
                          'Binomialverteilung' = includeMarkdown("docs/BinomialDistribution.md"),
                          'Poisson-Verteilung' = includeMarkdown("docs/PoissonDistribution.md")
-      )) # END switch)
+      )) # END switch
     }) # END output$dist.info
 }) # END shinyServer

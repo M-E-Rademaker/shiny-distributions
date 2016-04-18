@@ -10,7 +10,7 @@ Schreibweise:
 
 $$ X \sim N(\mu, \sigma^2)$$
 
-Die Normalverteilung ist eine stetige Verteilung mit:
+Die Normalverteilung ist eine stetige und um $\mu$ symmetrische Verteilung. Der Erwartungswert und die Varianz sind gegeben durch:
 
 $$ \text{E}(X) = \mu \qquad\text{und}\qquad \text{Var}(X) = \sigma^2 $$
 
@@ -31,11 +31,10 @@ Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.
 
 ### Quantilsfunktion
 
-Die Quantilsfunktion gibt an, welcher Wert (= Quantil $x_0$) zur Wahrscheinlichkeit
-korrespondiert, dass $p\%$ der Beobachtungen unter diesem Wert liegen. Formal ist
-die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion: 
+Die Quantilsfunktion gibt den Wert $x_p$ zurück, unterhalb dem $p$% der Wahrscheinlichkeitsmasse liegt. 
+Formal ist die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion: 
 
-$$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
+$$ x_p = F^{-1}(p) = F^{-1}[P(X \leq x_p)] $$
 
 ---
 
@@ -45,8 +44,8 @@ $$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
 
 + `=NORM.VERT`($x$; $\mu$; $\sigma$; **kumuliert**)
 
-    + $x$ := Ein x-Wert
-    + $\mu$ := Der Mittelwert
+    + $x$ := Stelle $x$ an der die Funktion ausgewertet werden soll
+    + $\mu$ := Mittelwert
     + $\sigma$ := Die Standardabweichung (nicht Varianz!)
     + kumuliert = 1 := Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)
     + kumuliert = 0 := Wert der Dichtefunktion (keine Wahrscheinlichkeit!)
@@ -55,7 +54,7 @@ $$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
 
 + `=NORM.S.VERT`($x$; **kumuliert**)
 
-    + $x$ := Ein x-Wert
+    + $x$ := Stelle $x$ an der die Funktion ausgewertet werden soll
     + kumuliert = 1 := Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)
     + kumuliert = 0 := Wert der Dichtefunktion (keine Wahrscheinlichkeit!)
 
@@ -64,8 +63,8 @@ $$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
 + `=NORM.INV`($p$; $\mu$; $\sigma$)
 
     + $p$ := Eine Wahrscheinlichkeit
-    + $\mu$ := Der Mittelwert
-    + $\sigma$ := Die Standardabweichung (nicht Varianz!)
+    + $\mu$ := Mittelwert
+    + $\sigma$ := Standardabweichung (nicht Varianz!)
 
 #### Quantilsfunktion der Standardnormalverteilung
 

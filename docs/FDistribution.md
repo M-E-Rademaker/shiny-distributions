@@ -10,12 +10,14 @@ Schreibweise:
 
 $$ X \sim F_{k_1, k_2} \quad\text{mit}\quad k_1, k_2 \in \mathbb{R}^{>0} $$
 
-Die F-Verteilung ist eine stetige Verteilung mit $k_1$ Zähler-
+Die F-Verteilung ist eine stetige Verteilung mit $k_1$ *Zähler-*
 und $k_2$ *Nennerfreiheitsgraden*. Erwartungswert und Varianz sind gegeben durch:
 
 $$ \text{E}(X) = \frac{k_2}{k_2 - 2}\quad\text{für}\quad k_2 > 2 \qquad\text{und}\qquad \text{Var}(X) = \frac{2k_2^2(k_1 + k_2 - 2)}{k_1(k_2 - 2)^2(k_2 - 4)}\quad\text{für}\quad k_2 > 4 $$
 
 ### Dichtefunktion
+
+Die Dichtefunktion ist gegeben durch:
 
 $$ f(x) = \begin{cases}
 k_1^{\frac{k_1}{2}}k_2^{\frac{k_2}{2}}\cdot \frac{\Gamma\left(\frac{k_1}{2} + \frac{k_2}{2}\right)}{\Gamma\left(\frac{k_1}{2}\right)\cdot\Gamma\left(\frac{k_2}{2}\right)}\cdot
@@ -44,11 +46,10 @@ Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.
 
 ### Quantilsfunktion
 
-Die Quantilsfunktion gibt an, welcher Wert (= Quantil $x_0$) zur Wahrscheinlichkeit
-korrespondiert, dass $p\%$ der Beobachtungen unter diesem Wert liegen. Formal ist
-die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion: 
+Die Quantilsfunktion gibt den Wert $x_p$ zurück, unterhalb dem $p$% der Wahrscheinlichkeitsmasse liegt. 
+Formal ist die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion:
 
-$$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
+$$ x_p = F^{-1}(p) = F^{-1}[P(X \leq x_p)] $$
 
 ---
 
@@ -58,7 +59,7 @@ $$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
 
 + `=F.VERT`($x$; $k_1$; $k_2$; **kumuliert**)
 
-    + $x$ := Ein x-Wert
+    + $x$ := Stelle $x$ an der die Funktion ausgewertet werden soll 
     + $k_1$ := Anzahl Zählerfreiheitsgrade
     + $k_2$ := Anzahl Nennerfreiheitsgrade
     + kumuliert = 1 := Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)
@@ -68,11 +69,11 @@ $$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
 
 + `=F.VERT.RE`($x$; $k_1$; $k_2$)
 
-    + $x$ := Ein x-Wert
+    + $x$ := Stelle $x$ an der die Funktion ausgewertet werden soll 
     + $k_1$ := Anzahl Zählerfreiheitsgrade
     + $k_2$ := Anzahl Nennerfreiheitsgrade
     
-Die Funktion `F.VERT.RE` berechnet: $P(X \geq x)$
+Die Funktion `F.VERT.RE` berechnet: $P(X \ge x)$
 
 #### Quantilsfunktion der F-Verteilung
 
@@ -90,4 +91,4 @@ Die Funktion `F.VERT.RE` berechnet: $P(X \geq x)$
     + $k_1$ := Anzahl Zählerfreiheitsgrade
     + $k_2$ := Anzahl Nennerfreiheitsgrade
     
-Die Funktion `F.INV.RE` berechnet: $x = F[P(X > x)]^{-1} = F[1 - P(X \leq x)]^{-1}$
+Die Funktion `F.INV.RE` berechnet: $x = F^{-1}[P(X > x)] = F^{-1}[1 - P(X \leq x)]$
