@@ -36,7 +36,7 @@ Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.
 Die Quantilsfunktion gibt den Wert zurück $(x_p)$, unterhalb dem p\% der Wahrscheinlichkeitsmasse liegt. 
 Formal ist die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion:
 
-$$ x_p = F(p)^{-1} = F[P(X \leq x_p)]^{-1} $$
+$$ x_p = F^{-1}(p) = F^{-1}[P(X \leq x_p)]$$
 
 ---
 

@@ -45,7 +45,7 @@ Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.
 Die Quantilsfunktion gibt den Wert zurück $(x_p)$, unterhalb dem p\% der Wahrscheinlichkeitsmasse liegt. 
 Formal ist die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion: 
 
-$$ x_p = F(p)^{-1} = F[P(X \leq x_p)]^{-1} $$
+$$ x_p = F^{-1}(p) = F^{-1}[P(X \leq x_p)] $$
 
 ---
 
@@ -92,7 +92,7 @@ Die Funktion `T.VERT.2S` berechnet: $P(|X| \geq x) = P(X \leq -x) + P(X \geq x)$
     + $p$ := Eine Wahrscheinlichkeit
     + $k$ := Anzahl Freiheitsgrade
     
-Die Funktion `T.INV.2S` berechnet: $x =  F[P(|X| > x)]^{-1}$
+Die Funktion `T.INV.2S` berechnet: $x =  F^{-1}[P(|X| > x)]$
 
 ----
 
