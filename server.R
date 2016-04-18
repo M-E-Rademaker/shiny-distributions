@@ -4,22 +4,6 @@
 #                               Shiny Server                                 #
 #                                                                            #
 ##############################################################################
-### Install packages if necessary
-
-if(!require("shiny")) install.packages("shiny")
-if(!require("shinythemes")) install.packages("shinythemes")
-if(!require("markdown")) install.packages("markdown")
-if(!require("ggplot2")) install.packages("ggplot2")
-if(!require("gridExtra")) install.packages("gridExtra")
-
-### Load required packages
-
-library(shiny)
-library(shinythemes)
-library(markdown)
-library(ggplot2)
-library(gridExtra)
-
 ### Begin server ---------------------------------------------------------------
 
 shinyServer(function(input, output, session) {
