@@ -568,9 +568,8 @@ shinyServer(function(input, output, session) {
                   geom_step() +
                   scale_x_continuous(breaks = input$axis.bin[1]:input$axis.bin[2]) +
                   ggtitle("Verteilungsfunktion der Binomialverteilung") +
-                  labs(y = expression("alpha"))
-                  # labs(y = "F(x) = P(X < x)")
-                
+                  labs(y = "F(x) = P(X ≤ x)")
+             
                 if (input$crit.value.checkbox) {
                   
                   # Critical value
@@ -627,7 +626,7 @@ shinyServer(function(input, output, session) {
                   geom_step() +
                   scale_x_continuous(breaks = input$axis.pois[1]:input$axis.pois[2]) +
                   ggtitle("Verteilungsfunktion der Poisson-Verteilung") +
-                  labs(y = "F(x) = P(X < x)")
+                  labs(y = "F(x) = P(X ≤ x)")
                 
                 if (input$crit.value.checkbox) {
                   
