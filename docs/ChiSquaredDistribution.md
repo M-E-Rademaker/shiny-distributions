@@ -90,4 +90,4 @@ Die Funktion `CHIQU.VERT.RE` berechnet: $P(X \geq x)$
     + $k_1$ := Anzahl Zählerfreiheitsgrade
     + $k_2$ := Anzahl Nennerfreiheitsgrade
     
-Die Funktion `CHIUQ.INV.RE` berechnet: $x = F[P(X > x)]^{-1} = F[1 - P(X \leq x)]^{-1}$
+Die Funktion `CHIQU.INV.RE` berechnet: $x = F[P(X > x)]^{-1} = F[1 - P(X \leq x)]^{-1}$
