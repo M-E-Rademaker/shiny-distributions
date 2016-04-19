@@ -29,10 +29,10 @@ $x$ bezeichnet.
 
 Motivieren lässt sich die $\chi^2$-Verteilung alternativ durch die Tatsache, dass eine *Summe
 an stochastisch unabhängigen standardnormalverteilten Zufallsvariablen* gerade einer
-$\chi^2$ Verteilung mit $k$ Freiheitsgraden folgt. Dabei ist $k$ die Anzahl der Summenglieder. 
+$\chi^2$-Verteilung mit $k$ Freiheitsgraden folgt. Dabei ist $k$ die Anzahl der Summenglieder. 
 Es gilt daher:
 
-$$ \sum^n_{i = 1} z^2_i \sim \chi^2_k \quad\text{mit}\quad z_i \sim N(0,1)\quad\text{und}\quad\text{cor}(x_i,x_j)=0 \forall i\neq j $$
+$$ \sum^n_{i = 1} z^2_i \sim \chi^2_k \quad\text{mit}\quad z_i \sim N(0,1)\quad\text{und}\quad\text{Cov}(z_i,z_j) = 0 \quad\forall i\neq j $$
 
 ### Verteilungsfunktion
 
@@ -45,10 +45,10 @@ Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.
 
 ### Quantilsfunktion
 
-Die Quantilsfunktion gibt den Wert zurück $(x_p)$, unterhalb dem p\% der Wahrscheinlichkeitsmasse liegt. 
+Die Quantilsfunktion gibt den Wert $x_p$ zurück, unterhalb dem $p$% der Wahrscheinlichkeitsmasse liegt. 
 Formal ist die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion: 
 
-$$ x_p = F^{-1}(p) = F^{-1}[P(X \leq x_p] $$
+$$ x_p = F^{-1}(p) = F^{-1}[P(X \leq x_p)] $$
 
 ---
 
@@ -87,5 +87,4 @@ Die Funktion `CHIQU.VERT.RE` berechnet: $P(X \ge x)$
     + $p$ := Eine Wahrscheinlichkeit
     + $k$ := Anzahl Freiheitsgrade
    
-    
-Die Funktion `CHIUQ.INV.RE` berechnet: $x = F^{-1}[P(X > x)] = F^{-1}[1 - P(X \leq x)]$
+Die Funktion `CHIQU.INV.RE` berechnet: $x = F^{-1}[P(X > x)] = F^{-1}[1 - P(X \leq x)]$

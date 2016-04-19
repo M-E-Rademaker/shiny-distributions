@@ -4,15 +4,6 @@
 #                               Shiny Server                                 #
 #                                                                            #
 ##############################################################################
-
-### Load required packages
-
-library(shiny)
-library(shinythemes)
-library(markdown)
-library(ggplot2)
-library(gridExtra)
-
 ### Begin server ---------------------------------------------------------------
 
 shinyServer(function(input, output, session) {
@@ -31,6 +22,8 @@ shinyServer(function(input, output, session) {
       
       uniblue <- "#063D79"
       
+      sig.niveau.local = ifelse(input$test.type == "Zweiseitig", 
+                                input$sig.niveau/2, input$sig.niveau)
       switch (input$dist,
               "Normalverteilung" = {
                 x <- seq(input$axis.norm[1], input$axis.norm[2], length.out = 1000)
@@ -54,8 +47,8 @@ shinyServer(function(input, output, session) {
                   
                   # Critical value
                   
-                  q_low <- qnorm(input$sig.niveau, mean = input$mu, sd = input$sigma)
-                  q_up <- qnorm(1 - input$sig.niveau, mean = input$mu, sd = input$sigma)
+                  q_low <- qnorm(sig.niveau.local, mean = input$mu, sd = input$sigma)
+                  q_up <- qnorm(1 - sig.niveau.local, mean = input$mu, sd = input$sigma)
                   
                   switch (input$test.type,
                           "Rechtsseitig" = {
@@ -94,23 +87,23 @@ shinyServer(function(input, output, session) {
                             
                             # shaded density
                             a <- a +
-                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 < sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue) + 
-                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue)
                             
                             # shaded distribution function
                             b <- b +
-                              geom_segment(aes(x = input$axis.norm[1], y = 1 - input$sig.niveau, 
-                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.norm[1], y = 1 - sig.niveau.local, 
+                                               xend = q_up, yend = 1 - sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, 
+                              geom_segment(aes(x = q_up, y = 1 - sig.niveau.local, 
                                                xend = q_up, yend = 1), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = input$axis.norm[1], y = input$sig.niveau, 
-                                               xend = q_low, yend = input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.norm[1], y = sig.niveau.local, 
+                                               xend = q_low, yend = sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_low, y = input$sig.niveau, 
+                              geom_segment(aes(x = q_low, y = sig.niveau.local, 
                                                xend = q_low, yend = 1), 
                                            linetype = "dashed", colour = uniblue) 
                           } # END Two-Sided
@@ -140,8 +133,8 @@ shinyServer(function(input, output, session) {
                   
                   # Critical value
                   
-                  q_low <- qt(input$sig.niveau, df = input$df.t)
-                  q_up <- qt(1 - input$sig.niveau, df = input$df.t)
+                  q_low <- qt(sig.niveau.local, df = input$df.t)
+                  q_up <- qt(1 - sig.niveau.local, df = input$df.t)
                   
                   switch (input$test.type,
                           "Rechtsseitig" = {
@@ -180,23 +173,23 @@ shinyServer(function(input, output, session) {
                             
                             # shaded density
                             a <- a +
-                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 < sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue) + 
-                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue)
                             
                             # shaded distribution function
                             b <- b +
-                              geom_segment(aes(x = input$axis.t[1], y = 1 - input$sig.niveau, 
-                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.t[1], y = 1 - sig.niveau.local, 
+                                               xend = q_up, yend = 1 - sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, 
+                              geom_segment(aes(x = q_up, y = 1 - sig.niveau.local, 
                                                xend = q_up, yend = 1), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = input$axis.t[1], y = input$sig.niveau, 
-                                               xend = q_low, yend = input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.t[1], y = sig.niveau.local, 
+                                               xend = q_low, yend = sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_low, y = input$sig.niveau, 
+                              geom_segment(aes(x = q_low, y = sig.niveau.local, 
                                                xend = q_low, yend = 1), 
                                            linetype = "dashed", colour = uniblue) 
                           } # END Two-Sided
@@ -226,23 +219,23 @@ shinyServer(function(input, output, session) {
                   
                   # Critical value
                   
-                  q_low <- qchisq(input$sig.niveau, df = input$df.chi)
-                  q_up <- qchisq(1 - input$sig.niveau, df = input$df.chi)
+                  q_low <- qchisq(sig.niveau.local, df = input$df.chi)
+                  q_up <- qchisq(1 - sig.niveau.local, df = input$df.chi)
                   
                   switch (input$test.type,
                           "Rechtsseitig" = {
                             
                             # shaded density
                             a <- a + 
-                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue)
                             
                             # shaded distribution function
                             b <- b +
-                              geom_segment(aes(x = input$axis.chi[1], y = 1 - input$sig.niveau, 
-                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.chi[1], y = 1 - sig.niveau.local, 
+                                               xend = q_up, yend = 1 - sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, xend = q_up, yend = 1), 
+                              geom_segment(aes(x = q_up, y = 1 - sig.niveau.local, xend = q_up, yend = 1), 
                                            linetype = "dashed", colour = uniblue)  
                           }, # END Right-Sided
                           
@@ -250,15 +243,15 @@ shinyServer(function(input, output, session) {
                             
                             # shaded density
                             a <- a +  
-                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 < sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue)
                             
                             # shaded distribution function
                             b <- b +
-                              geom_segment(aes(x = input$axis.chi[1], y = input$sig.niveau, 
-                                               xend = q_low, yend = input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.chi[1], y = sig.niveau.local, 
+                                               xend = q_low, yend = sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_low, y = input$sig.niveau, xend = q_low, yend = 1), 
+                              geom_segment(aes(x = q_low, y = sig.niveau.local, xend = q_low, yend = 1), 
                                            linetype = "dashed", colour = uniblue) 
                           }, # END Left-Sided
                           
@@ -266,23 +259,23 @@ shinyServer(function(input, output, session) {
                             
                             # shaded density
                             a <- a +
-                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 < sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue) + 
-                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue)
                             
                             # shaded distribution function
                             b <- b +
-                              geom_segment(aes(x = input$axis.chi[1], y = 1 - input$sig.niveau, 
-                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.chi[1], y = 1 - sig.niveau.local, 
+                                               xend = q_up, yend = 1 - sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, 
+                              geom_segment(aes(x = q_up, y = 1 - sig.niveau.local, 
                                                xend = q_up, yend = 1), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = input$axis.chi[1], y = input$sig.niveau, 
-                                               xend = q_low, yend = input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.chi[1], y = sig.niveau.local, 
+                                               xend = q_low, yend = sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_low, y = input$sig.niveau, 
+                              geom_segment(aes(x = q_low, y = sig.niveau.local, 
                                                xend = q_low, yend = 1), 
                                            linetype = "dashed", colour = uniblue) 
                           } # END Two-Sided
@@ -312,23 +305,23 @@ shinyServer(function(input, output, session) {
                   
                   # Critical value
                   
-                  q_low <- qf(input$sig.niveau, df1 = input$df1, df2 = input$df2)
-                  q_up <- qf(1 - input$sig.niveau, df1 = input$df1, df2 = input$df2)
+                  q_low <- qf(sig.niveau.local, df1 = input$df1, df2 = input$df2)
+                  q_up <- qf(1 - sig.niveau.local, df1 = input$df1, df2 = input$df2)
                   
                   switch (input$test.type,
                           "Rechtsseitig" = {
                             
                             # shaded density
                             a <- a + 
-                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue)
                             
                             # shaded distribution function
                             b <- b +
-                              geom_segment(aes(x = input$axis.f[1], y = 1 - input$sig.niveau, 
-                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.f[1], y = 1 - sig.niveau.local, 
+                                               xend = q_up, yend = 1 - sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, xend = q_up, yend = 1), 
+                              geom_segment(aes(x = q_up, y = 1 - sig.niveau.local, xend = q_up, yend = 1), 
                                            linetype = "dashed", colour = uniblue)  
                           }, # END Right-Sided
                           
@@ -336,15 +329,15 @@ shinyServer(function(input, output, session) {
                             
                             # shaded density
                             a <- a +  
-                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 < sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue)
                             
                             # shaded distribution function
                             b <- b +
-                              geom_segment(aes(x = input$axis.f[1], y = input$sig.niveau, 
-                                               xend = q_low, yend = input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.f[1], y = sig.niveau.local, 
+                                               xend = q_low, yend = sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_low, y = input$sig.niveau, xend = q_low, yend = 1), 
+                              geom_segment(aes(x = q_low, y = sig.niveau.local, xend = q_low, yend = 1), 
                                            linetype = "dashed", colour = uniblue) 
                           }, # END Left-Sided
                           
@@ -352,23 +345,23 @@ shinyServer(function(input, output, session) {
                             
                             # shaded density
                             a <- a +
-                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 < sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue) + 
-                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue)
                             
                             # shaded distribution function
                             b <- b +
-                              geom_segment(aes(x = input$axis.f[1], y = 1 - input$sig.niveau, 
-                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.f[1], y = 1 - sig.niveau.local, 
+                                               xend = q_up, yend = 1 - sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, 
+                              geom_segment(aes(x = q_up, y = 1 - sig.niveau.local, 
                                                xend = q_up, yend = 1), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = input$axis.f[1], y = input$sig.niveau, 
-                                               xend = q_low, yend = input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.f[1], y = sig.niveau.local, 
+                                               xend = q_low, yend = sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_low, y = input$sig.niveau, 
+                              geom_segment(aes(x = q_low, y = sig.niveau.local, 
                                                xend = q_low, yend = 1), 
                                            linetype = "dashed", colour = uniblue) 
                           } # END Two-Sided
@@ -398,23 +391,23 @@ shinyServer(function(input, output, session) {
                   
                   # Critical value
                   
-                  q_low <- qexp(input$sig.niveau, rate = input$rate)
-                  q_up <- qexp(1 - input$sig.niveau, rate = input$rate)
+                  q_low <- qexp(sig.niveau.local, rate = input$rate)
+                  q_up <- qexp(1 - sig.niveau.local, rate = input$rate)
                   
                   switch (input$test.type,
                           "Rechtsseitig" = {
                             
                             # shaded density
                             a <- a + 
-                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue)
                             
                             # shaded distribution function
                             b <- b +
-                              geom_segment(aes(x = input$axis.exp[1], y = 1 - input$sig.niveau, 
-                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.exp[1], y = 1 - sig.niveau.local, 
+                                               xend = q_up, yend = 1 - sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, xend = q_up, yend = 1), 
+                              geom_segment(aes(x = q_up, y = 1 - sig.niveau.local, xend = q_up, yend = 1), 
                                            linetype = "dashed", colour = uniblue)  
                           }, # END Right-Sided
                           
@@ -422,15 +415,15 @@ shinyServer(function(input, output, session) {
                             
                             # shaded density
                             a <- a +  
-                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 < sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue)
                             
                             # shaded distribution function
                             b <- b +
-                              geom_segment(aes(x = input$axis.exp[1], y = input$sig.niveau, 
-                                               xend = q_low, yend = input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.exp[1], y = sig.niveau.local, 
+                                               xend = q_low, yend = sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_low, y = input$sig.niveau, xend = q_low, yend = 1), 
+                              geom_segment(aes(x = q_low, y = sig.niveau.local, xend = q_low, yend = 1), 
                                            linetype = "dashed", colour = uniblue) 
                           }, # END Left-Sided
                           
@@ -438,23 +431,23 @@ shinyServer(function(input, output, session) {
                             
                             # shaded density
                             a <- a +
-                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 < sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue) + 
-                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue)
                             
                             # shaded distribution function
                             b <- b +
-                              geom_segment(aes(x = input$axis.exp[1], y = 1 - input$sig.niveau, 
-                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.exp[1], y = 1 - sig.niveau.local, 
+                                               xend = q_up, yend = 1 - sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, 
+                              geom_segment(aes(x = q_up, y = 1 - sig.niveau.local, 
                                                xend = q_up, yend = 1), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = input$axis.exp[1], y = input$sig.niveau, 
-                                               xend = q_low, yend = input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.exp[1], y = sig.niveau.local, 
+                                               xend = q_low, yend = sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_low, y = input$sig.niveau, 
+                              geom_segment(aes(x = q_low, y = sig.niveau.local, 
                                                xend = q_low, yend = 1), 
                                            linetype = "dashed", colour = uniblue) 
                           } # END Two-Sided
@@ -484,23 +477,23 @@ shinyServer(function(input, output, session) {
                   
                   # Critical value
                   
-                  q_low <- qunif(input$sig.niveau, min = input$axis.updown[1], max = input$axis.updown[2])
-                  q_up <- qunif(1 - input$sig.niveau, min = input$axis.updown[1], max = input$axis.updown[2])
+                  q_low <- qunif(sig.niveau.local, min = input$axis.updown[1], max = input$axis.updown[2])
+                  q_up <- qunif(1 - sig.niveau.local, min = input$axis.updown[1], max = input$axis.updown[2])
                   
                   switch (input$test.type,
                           "Rechtsseitig" = {
                             
                             # shaded density
                             a <- a + 
-                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue)
                             
                             # shaded distribution function
                             b <- b +
-                              geom_segment(aes(x = input$axis.cu[1], y = 1 - input$sig.niveau, 
-                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.cu[1], y = 1 - sig.niveau.local, 
+                                               xend = q_up, yend = 1 - sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, xend = q_up, yend = 1), 
+                              geom_segment(aes(x = q_up, y = 1 - sig.niveau.local, xend = q_up, yend = 1), 
                                            linetype = "dashed", colour = uniblue)  
                           }, # END Right-Sided
                           
@@ -508,15 +501,15 @@ shinyServer(function(input, output, session) {
                             
                             # shaded density
                             a <- a +  
-                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 < sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue)
                             
                             # shaded distribution function
                             b <- b +
-                              geom_segment(aes(x = input$axis.cu[1], y = input$sig.niveau, 
-                                               xend = q_low, yend = input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.cu[1], y = sig.niveau.local, 
+                                               xend = q_low, yend = sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_low, y = input$sig.niveau, xend = q_low, yend = 1), 
+                              geom_segment(aes(x = q_low, y = sig.niveau.local, xend = q_low, yend = 1), 
                                            linetype = "dashed", colour = uniblue) 
                           }, # END Left-Sided
                           
@@ -524,23 +517,23 @@ shinyServer(function(input, output, session) {
                             
                             # shaded density
                             a <- a +
-                              geom_ribbon(data = subset(plotdata, y2 < input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 < sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue) + 
-                              geom_ribbon(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                              geom_ribbon(data = subset(plotdata, y2 > 1 - sig.niveau.local), 
                                           aes(ymax = y1, ymin = 0), fill = uniblue)
                             
                             # shaded distribution function
                             b <- b +
-                              geom_segment(aes(x = input$axis.cu[1], y = 1 - input$sig.niveau, 
-                                               xend = q_up, yend = 1 - input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.cu[1], y = 1 - sig.niveau.local, 
+                                               xend = q_up, yend = 1 - sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, 
+                              geom_segment(aes(x = q_up, y = 1 - sig.niveau.local, 
                                                xend = q_up, yend = 1), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = input$axis.cu[1], y = input$sig.niveau, 
-                                               xend = q_low, yend = input$sig.niveau), 
+                              geom_segment(aes(x = input$axis.cu[1], y = sig.niveau.local, 
+                                               xend = q_low, yend = sig.niveau.local), 
                                            linetype = "dashed", colour = uniblue) +
-                              geom_segment(aes(x = q_low, y = input$sig.niveau, 
+                              geom_segment(aes(x = q_low, y = sig.niveau.local, 
                                                xend = q_low, yend = 1), 
                                            linetype = "dashed", colour = uniblue) 
                           } # END Two-Sided
@@ -566,70 +559,41 @@ shinyServer(function(input, output, session) {
                   geom_step() +
                   scale_x_continuous(breaks = input$axis.bin[1]:input$axis.bin[2]) +
                   ggtitle("Verteilungsfunktion der Binomialverteilung") +
-                  labs(y = "F(x) = P(X < x)")
-                
+                  labs(y = "F(x) = P(X ≤ x)")
+             
                 if (input$crit.value.checkbox) {
                   
                   # Critical value
                   
-                  q_low <- qbinom(input$sig.niveau, size = input$size, prob = input$prop)
-                  q_up <- qbinom(1 - input$sig.niveau, size = input$size, prob = input$prop)
+                  q_low <- qbinom(sig.niveau.local, size = input$size, prob = input$prop)
+                  q_up <- qbinom(1 - sig.niveau.local, size = input$size, prob = input$prop)
                   
                   switch (input$test.type,
                           "Rechtsseitig" = {
                             
                             # shaded bars 
                             a <- a + 
-                              geom_bar(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                              geom_bar(data = subset(plotdata, y2 > 1 - sig.niveau.local), 
                                        stat="identity", fill = uniblue)
                               
-                            
-                            # shaded distribution function
-                            # b <- b +
-                            #   geom_segment(aes(x = input$axis.bin[1], y = 1 - input$sig.niveau, 
-                            #                    xend = q_up, yend = 1 - input$sig.niveau), 
-                            #                linetype = "dashed", colour = uniblue)
-                              # geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, xend = q_up, yend = 1), 
-                              #              linetype = "dashed", colour = uniblue)  
                           }, # END Right-Sided
                           
                           "Linksseitig" = {
                             
                             # shaded density
                             a <- a +  
-                              geom_bar(data = subset(plotdata, y2 <= input$sig.niveau), 
+                              geom_bar(data = subset(plotdata, y2 <= sig.niveau.local), 
                                           stat="identity", fill = uniblue)
                             
-                            # shaded distribution function
-                            # b <- b +
-                            #   geom_segment(aes(x = input$axis.t[1], y = input$sig.niveau, 
-                            #                    xend = q_low, yend = input$sig.niveau), 
-                            #                linetype = "dashed", colour = uniblue) +
-                            #   geom_segment(aes(x = q_low, y = input$sig.niveau, xend = q_low, yend = 1), 
-                            #                linetype = "dashed", colour = uniblue) 
                           }, # END Left-Sided
                           
                           "Zweiseitig" = {
                             
                             # shaded density
                             a <- a +
-                              geom_bar(data = subset(plotdata, y2 <= input$sig.niveau | y2 > 1 - input$sig.niveau), 
+                              geom_bar(data = subset(plotdata, y2 <= sig.niveau.local | y2 > 1 - sig.niveau.local), 
                                        stat="identity", fill = uniblue)
                             
-                            # shaded distribution function
-                            # b <- b +
-                            #   geom_segment(aes(x = input$axis.t[1], y = 1 - input$sig.niveau, 
-                            #                    xend = q_up, yend = 1 - input$sig.niveau), 
-                            #                linetype = "dashed", colour = uniblue) +
-                            #   geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, 
-                            #                    xend = q_up, yend = 1), 
-                            #                linetype = "dashed", colour = uniblue) +
-                            #   geom_segment(aes(x = input$axis.t[1], y = input$sig.niveau, 
-                            #                    xend = q_low, yend = input$sig.niveau), 
-                            #                linetype = "dashed", colour = uniblue) +
-                            #   geom_segment(aes(x = q_low, y = input$sig.niveau, 
-                            #                    xend = q_low, yend = 1), 
-                            #                linetype = "dashed", colour = uniblue) 
                           } # END Two-Sided
                   ) # END switch(input$test.type)
                 } # END if statement
@@ -653,70 +617,41 @@ shinyServer(function(input, output, session) {
                   geom_step() +
                   scale_x_continuous(breaks = input$axis.pois[1]:input$axis.pois[2]) +
                   ggtitle("Verteilungsfunktion der Poisson-Verteilung") +
-                  labs(y = "F(x) = P(X < x)")
+                  labs(y = "F(x) = P(X ≤ x)")
                 
                 if (input$crit.value.checkbox) {
                   
                   # Critical value
                   
-                  q_low <- qpois(input$sig.niveau, lambda = input$lambda)
-                  q_up <- qpois(1 - input$sig.niveau, lambda = input$lambda)
+                  q_low <- qpois(sig.niveau.local, lambda = input$lambda)
+                  q_up <- qpois(1 - sig.niveau.local, lambda = input$lambda)
                   
                   switch (input$test.type,
                           "Rechtsseitig" = {
                             
                             # shaded bars 
                             a <- a + 
-                              geom_bar(data = subset(plotdata, y2 > 1 - input$sig.niveau), 
+                              geom_bar(data = subset(plotdata, y2 > 1 - sig.niveau.local), 
                                        stat="identity", fill = uniblue)
                             
-                            
-                            # shaded distribution function
-                            # b <- b +
-                            #   geom_segment(aes(x = input$axis.bin[1], y = 1 - input$sig.niveau, 
-                            #                    xend = q_up, yend = 1 - input$sig.niveau), 
-                            #                linetype = "dashed", colour = uniblue)
-                            # geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, xend = q_up, yend = 1), 
-                            #              linetype = "dashed", colour = uniblue)  
                           }, # END Right-Sided
                           
                           "Linksseitig" = {
                             
                             # shaded density
                             a <- a +  
-                              geom_bar(data = subset(plotdata, y2 <= input$sig.niveau), 
+                              geom_bar(data = subset(plotdata, y2 <= sig.niveau.local), 
                                        stat="identity", fill = uniblue)
                             
-                            # shaded distribution function
-                            # b <- b +
-                            #   geom_segment(aes(x = input$axis.t[1], y = input$sig.niveau, 
-                            #                    xend = q_low, yend = input$sig.niveau), 
-                            #                linetype = "dashed", colour = uniblue) +
-                            #   geom_segment(aes(x = q_low, y = input$sig.niveau, xend = q_low, yend = 1), 
-                            #                linetype = "dashed", colour = uniblue) 
                           }, # END Left-Sided
                           
                           "Zweiseitig" = {
                             
                             # shaded density
                             a <- a +
-                              geom_bar(data = subset(plotdata, y2 <= input$sig.niveau | y2 > 1 - input$sig.niveau), 
+                              geom_bar(data = subset(plotdata, y2 <= sig.niveau.local | y2 > 1 - sig.niveau.local), 
                                        stat="identity", fill = uniblue)
                             
-                            # shaded distribution function
-                            # b <- b +
-                            #   geom_segment(aes(x = input$axis.t[1], y = 1 - input$sig.niveau, 
-                            #                    xend = q_up, yend = 1 - input$sig.niveau), 
-                            #                linetype = "dashed", colour = uniblue) +
-                            #   geom_segment(aes(x = q_up, y = 1 - input$sig.niveau, 
-                            #                    xend = q_up, yend = 1), 
-                            #                linetype = "dashed", colour = uniblue) +
-                            #   geom_segment(aes(x = input$axis.t[1], y = input$sig.niveau, 
-                            #                    xend = q_low, yend = input$sig.niveau), 
-                            #                linetype = "dashed", colour = uniblue) +
-                            #   geom_segment(aes(x = q_low, y = input$sig.niveau, 
-                            #                    xend = q_low, yend = 1), 
-                            #                linetype = "dashed", colour = uniblue) 
                           } # END Two-Sided
                   ) # END switch(input$test.type)
                 } # END if statement
@@ -726,7 +661,6 @@ shinyServer(function(input, output, session) {
       
     } else { # makes sure that the normal distribution appears at start
              # so uses "see something" when they acess the page for the first time
-      
       # Density function
       a <- ggplot(data.frame(x = -5:5), aes(x)) +
         stat_function(fun = dnorm) +
@@ -808,54 +742,56 @@ shinyServer(function(input, output, session) {
                      strong(ifelse(input$test.type == "Rechtsseitig", "rechtsseitigem", 
                                    ifelse(input$test.type == "Linksseitig", "linksseitigem", "zweiseitigem"))), 
                      " Test:")
+      sig.niveau.local = ifelse(input$test.type == "Zweiseitig", 
+             input$sig.niveau/2, input$sig.niveau)
       
       switch (input$dist,
                           'Normalverteilung' = {
                             
-                            q_low <- qnorm(input$sig.niveau, mean = input$mu, sd = input$sigma)
-                            q_up <- qnorm(1 - input$sig.niveau, mean = input$mu, sd = input$sigma)
+                            q_low <- qnorm(sig.niveau.local, mean = input$mu, sd = input$sigma)
+                            q_up <- qnorm(1 - sig.niveau.local, mean = input$mu, sd = input$sigma)
                             
                           }, # END Normalverteilung
                           't-Verteilung' = {
                             
-                            q_low <- qt(input$sig.niveau, df = input$df.t)
-                            q_up <- qt(1 - input$sig.niveau, df = input$df.t)
+                            q_low <- qt(sig.niveau.local, df = input$df.t)
+                            q_up <- qt(1 - sig.niveau.local, df = input$df.t)
                             
                           }, # END t-Verteilung
                           'Chi-Quadrat-Verteilung' = {
                             
-                            q_low <- qchisq(input$sig.niveau, df = input$df.chi)
-                            q_up <- qchisq(1 - input$sig.niveau, df = input$df.chi)
+                            q_low <- qchisq(sig.niveau.local, df = input$df.chi)
+                            q_up <- qchisq(1 - sig.niveau.local, df = input$df.chi)
                             
                           }, # END Chi-Quadrat-Verteilung
                           'F-Verteilung' = {
                             
-                            q_low <- qf(input$sig.niveau, df1 = input$df1, df2 = input$df2)
-                            q_up <- qf(1 - input$sig.niveau, df1 = input$df1, df2 = input$df2)
+                            q_low <- qf(sig.niveau.local, df1 = input$df1, df2 = input$df2)
+                            q_up <- qf(1 - sig.niveau.local, df1 = input$df1, df2 = input$df2)
                             
                           },
                           'Exponentialverteilung' = {
                             
-                            q_low <- qexp(input$sig.niveau, rate = input$rate)
-                            q_up <- qexp(1 - input$sig.niveau, rate = input$rate)
+                            q_low <- qexp(sig.niveau.local, rate = input$rate)
+                            q_up <- qexp(1 - sig.niveau.local, rate = input$rate)
                             
                           },
                           'Stetige Gleichverteilung' = {
                             
-                            q_low <- qunif(input$sig.niveau, min = input$axis.updown[1], max = input$axis.updown[2])
-                            q_up <- qunif(1 - input$sig.niveau, min = input$axis.updown[1], max = input$axis.updown[2])
+                            q_low <- qunif(sig.niveau.local, min = input$axis.updown[1], max = input$axis.updown[2])
+                            q_up <- qunif(1 - sig.niveau.local, min = input$axis.updown[1], max = input$axis.updown[2])
                             
                           },
                           'Binomialverteilung' = {
                             
-                            q_low <- qbinom(input$sig.niveau, size = input$size, prob = input$prop)
-                            q_up <- qbinom(1 - input$sig.niveau, size = input$size, prob = input$prop)
+                            q_low <- qbinom(sig.niveau.local, size = input$size, prob = input$prop)
+                            q_up <- qbinom(1 - sig.niveau.local, size = input$size, prob = input$prop)
                             
                           },
                           'Poisson-Verteilung' = {
                             
-                            q_low <- qpois(input$sig.niveau, lambda = input$lambda)
-                            q_up <- qpois(1 - input$sig.niveau, lambda = input$lambda)
+                            q_low <- qpois(sig.niveau.local, lambda = input$lambda)
+                            q_up <- qpois(1 - sig.niveau.local, lambda = input$lambda)
                             
                           }
       ) # END switch dist
@@ -892,7 +828,6 @@ shinyServer(function(input, output, session) {
                          'Stetige Gleichverteilung' = includeMarkdown("docs/UniformDistribution.md"),
                          'Binomialverteilung' = includeMarkdown("docs/BinomialDistribution.md"),
                          'Poisson-Verteilung' = includeMarkdown("docs/PoissonDistribution.md")
-      )) # END switch)
+      )) # END switch
     }) # END output$dist.info
-  
 }) # END shinyServer

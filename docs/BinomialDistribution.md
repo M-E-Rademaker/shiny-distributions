@@ -22,7 +22,7 @@ Die Wahrscheinlichkeitsfunktion ist gegeben durch:
 $$ p(x) = P(X=x) = \begin{cases} \binom{n}{x}p^x (1 - p)^{n-x} & \text{für}\quad x \in \{0,1,2,\dots,n\} \\\\
 0 & \text{sonst} \end{cases} $$
   
-mit $x$ := Anzahl der "Treffer".
+mit $x$ := Anzahl der "Treffer" und $\binom{n}{x}$ := Binomialkoeffizient. 
 
 ### Verteilungsfunktion
 
@@ -35,7 +35,7 @@ Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.
 
 ### Quantilsfunktion
 
-Die Quantilsfunktion gibt den Wert zurück $(x_p)$, unterhalb dem p\% der Wahrscheinlichkeitsmasse liegt. 
+Die Quantilsfunktion gibt den Wert $x_p$ zurück, unterhalb dem $p$% der Wahrscheinlichkeitsmasse liegt. 
 Formal ist die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion:
 
 $$ x_p = F^{-1}(p) = F^{-1}[P(X \leq x_p)] $$

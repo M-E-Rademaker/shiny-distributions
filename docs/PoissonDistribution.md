@@ -17,7 +17,7 @@ $$ \text{E}(X) = \text{Var}(X) = \lambda $$
 
 Die Wahrscheinlichkeitsfunktion ist gegeben durch:
 
-$$ p(x) = P(X = x) = \begin{cases} \frac{\lambda^k}{x!}\exp{-\lambda} & \text{für}\quad x\in \mathbb{N} \\\\ 0 & \text{sonst} \end{cases} $$
+$$ p(x) = P(X = x) = \begin{cases} \frac{\lambda^k}{x!}\exp(-\lambda) & \text{für}\quad x\in \mathbb{N} \\\\ 0 & \text{sonst} \end{cases} $$
 
 ### Verteilungsfunktion
 
@@ -30,7 +30,7 @@ Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.
 
 ### Quantilsfunktion
 
-Die Quantilsfunktion gibt den Wert zurück $(x_p)$, unterhalb dem p\% der Wahrscheinlichkeitsmasse liegt. 
+Die Quantilsfunktion gibt den Wert $x_p$ zurück, unterhalb dem $p$% der Wahrscheinlichkeitsmasse liegt. 
 Formal ist die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion:
 
 $$ x_p = F^{-1}(p) = F^{-1}[P(X \leq x_p)] $$

@@ -1,8 +1,24 @@
-﻿################################################################################
-#                                                                            
-#                               Shiny user interface (ui)
-#                                                                            
 ################################################################################
+#
+#                               Shiny user interface (ui)
+#
+################################################################################
+### Install packages if necessary
+
+if(!require("shiny")) install.packages("shiny")
+if(!require("shinythemes")) install.packages("shinythemes")
+if(!require("markdown")) install.packages("markdown")
+if(!require("ggplot2")) install.packages("ggplot2")
+if(!require("gridExtra")) install.packages("gridExtra")
+
+### Load required packages
+
+library(shiny)
+library(shinythemes)
+library(markdown)
+library(ggplot2)
+library(gridExtra)
+
 ### Begin ui -------------------------------------------------------------------
 
 shinyUI(
@@ -10,30 +26,26 @@ shinyUI(
     theme = "stylesheet.css",
     
     ### Header -----------------------------------------------------------------
-    
-    fluidRow(
+
+    fluidRow(# div(id="titlebar","Verteilungsfunktionen und Hypothesentests"),
       div(id = "spacer",
-          div(id = "titlebar",br(),"Verteilungsfunktionen und Hypothesentests"),
-          br(),
-          includeHTML("www/lehrstuhl.html"),
-          br(),
-          tags$head(
-            tags$link(href = "shared/font-awesome/css/font-awesome.min.css",
-                      rel = "stylesheet")
-          )
+        div(id = "titlebar",br(),"Verteilungsfunktionen",br()," "),
+        br(),
+        includeHTML("www/lehrstuhl.html"),
+        tags$head(
+          tags$link(href = "shared/font-awesome/css/font-awesome.min.css",
+                    rel = "stylesheet")
+        )
       )),
-    
-    # fluidRow(
-    #   div(id="titlebar","Verteilungsfunktionen und Hypothesentests"),
-    #   br()
-    # ),
+
     sidebarLayout(
-      
-### Sidebar panel --------------------------------------------------------------
-      
-      sidebarPanel(width = 3,
+      ### Sidebar panel ----------------------------------------------------------
+
+      sidebarPanel(
+        width = 3,
         tabsetPanel(
-          tabPanel("Verteilungen",
+          tabPanel(
+            "Verteilungen",
             fluidRow(
               helpText("1. Wähle eine Verteilung"),
               selectInput('dist', NULL, 
@@ -50,6 +62,7 @@ shinyUI(
               ), # END fluidRow 
 
             ### Conditonal Panels ----------------------------------------------------------
+            fluidRow(
             conditionalPanel("input.dist == 'Normalverteilung'",
                              helpText("2. Wähle die Parameter der Verteilung."),
                              numericInput(inputId = 'mu', label = 'μ', value = 0), 
@@ -96,12 +109,13 @@ shinyUI(
                              numericInput(inputId = 'lambda',label = 'Lambda', value = 1, min = 0, step = 0.1),
                              helpText("3. Wähle den gewünschten x-Achsenbereich"),
                              sliderInput("axis.pois", label = NULL, min = 0, max = 100, value = c(0, 10)))
+            ) # end fluidRow
           ), # tabPanel
           tabPanel("Hypothesentests",
                    helpText("1. Wähle die Art des Tests"),
                    selectInput('test.type', NULL, c('Rechtsseitig', 'Linksseitig', 'Zweiseitig')),
                    helpText("2. Wähle das gewünschte Signifikanzniveau"),
-                   numericInput("sig.niveau", NULL, value = 0.05, max = 1, step = 0.1),
+                   numericInput("sig.niveau", NULL, value = 0.05, min = 0, max = 1, step = 0.1),
                    helpText("3. Ablehnungsbereich einzeichnen ?"),
                    checkboxInput('crit.value.checkbox', label = "Ja", value = F)
           ) # END tabPanel 

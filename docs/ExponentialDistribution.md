@@ -19,7 +19,7 @@ $$ \text{E}(X) = \frac{1}{\alpha} \qquad\text{und}\qquad \text{Var}(X) = \frac{1
 
 Die Dichtefunktion ist gegeben durch:
 
-$$ f(x) = \begin{cases} \alpha \exp{-\alpha x} & \text{für}\quad x \geq 0 \\\\
+$$ f(x) = \begin{cases} \alpha \exp(-\alpha x) & \text{für}\quad x \geq 0 \\\\
 0 & \text{sonst} \end{cases} $$
 
 ### Verteilungsfunktion
@@ -33,7 +33,7 @@ Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.
 
 ### Quantilsfunktion
 
-Die Quantilsfunktion gibt den Wert zurück $(x_p)$, unterhalb dem p\% der Wahrscheinlichkeitsmasse liegt. 
+Die Quantilsfunktion gibt den Wert $x_p$ zurück, unterhalb dem $p$% der Wahrscheinlichkeitsmasse liegt. 
 Formal ist die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion:
 
 $$ x_p = F^{-1}(p) = F^{-1}[P(X \leq x_p)]$$
