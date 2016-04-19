@@ -17,7 +17,7 @@ $$ \text{E}(X) = \text{Var}(X) = \lambda $$
 
 Die Wahrscheinlichkeitsfunktion ist gegeben durch:
 
-$$ p(x) = P(X = x) = \begin{cases} \frac{\lambda^k}{x!}\exp{-\lambda} & \text{für}\quad x\in \mathbb{N} \\\\ 0 & \text{sonst} \end{cases} $$
+$$ p(x) = P(X = x) = \begin{cases} \frac{\lambda^k}{x!}\exp(-\lambda) & \text{für}\quad x\in \mathbb{N} \\\\ 0 & \text{sonst} \end{cases} $$
 
 ### Verteilungsfunktion
 

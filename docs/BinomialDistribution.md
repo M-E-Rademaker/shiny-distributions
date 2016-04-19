@@ -22,7 +22,7 @@ Die Wahrscheinlichkeitsfunktion ist gegeben durch:
 $$ p(x) = P(X=x) = \begin{cases} \binom{n}{x}p^x (1 - p)^{n-x} & \text{für}\quad x \in \{0,1,2,\dots,n\} \\\\
 0 & \text{sonst} \end{cases} $$
   
-mit $x$ := Anzahl der "Treffer".
+mit $x$ := Anzahl der "Treffer" und $\binom{n}{x}$ := Binomialkoeffizient. 
 
 ### Verteilungsfunktion
 

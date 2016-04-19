@@ -19,7 +19,7 @@ $$ \text{E}(X) = \frac{1}{\alpha} \qquad\text{und}\qquad \text{Var}(X) = \frac{1
 
 Die Dichtefunktion ist gegeben durch:
 
-$$ f(x) = \begin{cases} \alpha \exp{-\alpha x} & \text{für}\quad x \geq 0 \\\\
+$$ f(x) = \begin{cases} \alpha \exp(-\alpha x) & \text{für}\quad x \geq 0 \\\\
 0 & \text{sonst} \end{cases} $$
 
 ### Verteilungsfunktion
