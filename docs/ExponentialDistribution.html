@@ -62,12 +62,44 @@ img {
 
 
 <hr />
-<div id="die-exponentialverteilung" class="section level3">
-<h3>Die Exponentialverteilung</h3>
+<div id="die-exponentialverteilung" class="section level2">
+<h2>Die Exponentialverteilung</h2>
 <p>Schreibweise:</p>
 <p><span class="math display">\[ X \sim \text{Ex}(\alpha) \quad\text{mit}\quad \alpha \in \mathbb{R}^{&gt;0} \]</span></p>
-<div id="dichtefunktion" class="section level4">
-<h4>Dichtefunktion:</h4>
+<p>Die Exponentialverteilung ist eine stetige Verteilung mir dem Verteilungsparameter <span class="math inline">\(\alpha\)</span>. Erwartungswert und Varianz sind gegeben durch:</p>
+<p><span class="math display">\[ \text{E}(X) = \frac{1}{\alpha} \qquad\text{und}\qquad \text{Var}(X) = \frac{1}{\alpha^2} \]</span></p>
+<div id="dichtefunktion" class="section level3">
+<h3>Dichtefunktion</h3>
+<p>Die Dichtefunktion ist gegeben durch:</p>
+<p><span class="math display">\[ f(x) = \begin{cases} \alpha \exp{-\alpha x} &amp; \text{für}\quad x \geq 0 \\\\
+0 &amp; \text{sonst} \end{cases} \]</span></p>
+</div>
+<div id="verteilungsfunktion" class="section level3">
+<h3>Verteilungsfunktion</h3>
+<p>Die Verteilungsfunktion ist definiert als:</p>
+<p><span class="math display">\[ F(x) = P(X \leq x) = \int^{x}_{-\infty}f(t) dt \]</span></p>
+<p>Der Wert der Verteilungsfunktion gibt an, mit welcher Wahrscheinlichkeit die Zufallsvariable <span class="math inline">\(X\)</span> einen Wert kleiner oder gleich <span class="math inline">\(x\)</span> annimmt.</p>
+</div>
+<div id="quantilsfunktion" class="section level3">
+<h3>Quantilsfunktion</h3>
+<p>Die Quantilsfunktion gibt den Wert <span class="math inline">\(x_p\)</span> zurück, unterhalb dem <span class="math inline">\(p\)</span>% der Wahrscheinlichkeitsmasse liegt. Formal ist die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion:</p>
+<p><span class="math display">\[ x_p = F^{-1}(p) = F^{-1}[P(X \leq x_p)]\]</span></p>
+<hr />
+</div>
+<div id="excel-befehle" class="section level3">
+<h3>Excel Befehle</h3>
+<div id="dichte--bzw.-verteilungsfunktion-der-exponentialverteilung" class="section level4">
+<h4>Dichte- bzw. Verteilungsfunktion der Exponentialverteilung</h4>
+<ul>
+<li><p><code>=EXPON.VERT</code>(<span class="math inline">\(x\)</span>; <span class="math inline">\(\alpha\)</span>; <strong>kumuliert</strong>)</p>
+<ul>
+<li><span class="math inline">\(x\)</span> := Stelle <span class="math inline">\(x\)</span> an der die Funktion ausgewertet werden soll</li>
+<li><span class="math inline">\(\alpha\)</span> := Verteilungsparameter (in Excel: <span class="math inline">\(\alpha\)</span> = <span class="math inline">\(\lambda\)</span>)</li>
+<li>kumuliert = 1 := Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)</li>
+<li>kumuliert = 0 := Wert der Dichtefunktion (keine Wahrscheinlichkeit!)</li>
+</ul></li>
+</ul>
+</div>
 </div>
 </div>
 

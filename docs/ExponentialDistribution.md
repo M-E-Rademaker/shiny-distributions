@@ -33,11 +33,10 @@ Zufallsvariable $X$ einen Wert kleiner oder gleich $x$ annimmt.
 
 ### Quantilsfunktion
 
-Die Quantilsfunktion gibt an, welcher Wert (= Quantil $x_0$) zur Wahrscheinlichkeit
-korrespondiert, dass $p\%$ der Beobachtungen unter diesem Wert liegen. Formal ist
-die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion: 
+Die Quantilsfunktion gibt den Wert $x_p$ zurück, unterhalb dem $p$% der Wahrscheinlichkeitsmasse liegt. 
+Formal ist die Quantilsfunktion die Umkehrfunktion der Verteilungsfunktion:
 
-$$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
+$$ x_p = F^{-1}(p) = F^{-1}[P(X \leq x_p)]$$
 
 ---
 
@@ -47,7 +46,7 @@ $$ x = F(p)^{-1} = F[P(X \leq x)]^{-1} $$
 
 + `=EXPON.VERT`($x$; $\alpha$; **kumuliert**)
 
-    + $x$ := Ein x-Wert
-    + $\alpha$ := Verteilungsparameter (in Excel: \alpha =  \lambda)
+    + $x$ := Stelle $x$ an der die Funktion ausgewertet werden soll 
+    + $\alpha$ := Verteilungsparameter (in Excel: $\alpha$ =  $\lambda$)
     + kumuliert = 1 := Wert der Verteilungsfunktion (eine Wahrscheinlichkeit)
     + kumuliert = 0 := Wert der Dichtefunktion (keine Wahrscheinlichkeit!)
