@@ -32,7 +32,7 @@ an stochastisch unabhängigen standardnormalverteilten Zufallsvariablen* gerade 
 $\chi^2$-Verteilung mit $k$ Freiheitsgraden folgt. Dabei ist $k$ die Anzahl der Summenglieder. 
 Es gilt daher:
 
-$$ \sum^n_{i = 1} z^2_i \sim \chi^2_k \quad\text{mit}\quad z_i \sim N(0,1)\quad\text{und}\quad\text{Cov}(z_i,z_j) = 0 \quad\forall\, i\neq j $$
+$$ \sum^n_{i = 1} z^2_i \sim \chi^2_k \quad\text{mit}\quad z_i \sim N(0,1)\quad\text{und}\quad\text{Cov}(z_i,z_j) = 0 \quad\forall i\neq j $$
 
 ### Verteilungsfunktion
 
