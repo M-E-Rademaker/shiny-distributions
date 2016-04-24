@@ -19,13 +19,15 @@ library(markdown)
 library(ggplot2)
 library(gridExtra)
 
+library(shinyjs)
 ### Begin ui -------------------------------------------------------------------
 
 shinyUI(
   fluidPage(
+    useShinyjs(),
     theme = "stylesheet.css",
     
-    ### Header -----------------------------------------------------------------
+### Header -----------------------------------------------------------------
 
     fluidRow(# div(id="titlebar","Verteilungsfunktionen und Hypothesentests"),
       div(id = "spacer",
@@ -39,7 +41,8 @@ shinyUI(
       )),
 
     sidebarLayout(
-      ### Sidebar panel ----------------------------------------------------------
+      
+### Sidebar panel ----------------------------------------------------------
 
       sidebarPanel(
         width = 3,
@@ -100,7 +103,7 @@ shinyUI(
                              helpText("2. Wähle die Parameter der Verteilung."),
                              numericInput(inputId = 'size',label = 'n', 
                                           value = 5, min = 0, step = 1),
-                             numericInput(inputId = 'prop',label = 'p', 
+                             numericInput(inputId = 'prob',label = 'p', 
                                           value = 0.5, min = 0, max = 1, step = 0.1),
                              helpText("3. Wähle den gewünschten x-Achsenbereich"),
                              sliderInput("axis.bin", label = NULL, min = 0, max = 100, value = c(0, 10))),
@@ -109,7 +112,37 @@ shinyUI(
                              numericInput(inputId = 'lambda',label = 'Lambda', value = 1, min = 0, step = 0.1),
                              helpText("3. Wähle den gewünschten x-Achsenbereich"),
                              sliderInput("axis.pois", label = NULL, min = 0, max = 100, value = c(0, 10)))
-            ) # end fluidRow
+            ), # end fluidRow
+            br(),
+            fluidRow(
+                helpText("4.1 Welche Werte sollen berechnet werden"),
+                selectInput('distquant', NULL,
+                            c('Keine',
+                              'Wert der Dichtefunktion',
+                              'Wert der Wahrscheinlichkeitsfunktion',
+                              'Wert der Verteilungsfunktion',
+                              'Wert der Quantilsfunktion')),
+                conditionalPanel("input.distquant == 'Wert der Wahrscheinlichkeitsfunktion'",
+                                 helpText("4.2 Für welches x soll der Wert
+                                          der Wahrscheinlichkeitsfunktion berechnet werden?"),
+                                 numericInput("prob.value", NULL, value = 0)
+                                 ),
+                conditionalPanel("input.distquant == 'Wert der Dichtefunktion'",
+                                 helpText("4.2 Für welches x soll der Wert
+                                          der Dichtefunktion berechnet werden?"),
+                                 numericInput("dens.value", NULL, value = 0)
+                                 ),
+                conditionalPanel("input.distquant == 'Wert der Verteilungsfunktion'",
+                                 helpText("4.2 Für welches x soll der Wert
+                                          der Verteilungsfunktion berechnet werden?"),
+                                 numericInput("dist.value", NULL, value = 0)
+                                 ),
+                conditionalPanel("input.distquant == 'Wert der Quantilsfunktion'",
+                                 helpText("4.2 Für welche Wahrscheinlichkeit soll der Wert
+                                          der Quantilsfunktion berechnet werden?"),
+                                 numericInput("quant.prob", NULL, value = 0.5, min = 0, max = 1, step = 0.1)
+                                 )
+            ) # END fluidRow
           ), # tabPanel
           tabPanel("Hypothesentests",
                    helpText("1. Wähle die Art des Tests"),
@@ -128,6 +161,7 @@ shinyUI(
         
         plotOutput('plot'),
         br(),
+        uiOutput("ddq"),
         uiOutput("crit.value.text"),
         br(),
         uiOutput('dist.info')
