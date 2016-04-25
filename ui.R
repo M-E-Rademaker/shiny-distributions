@@ -7,6 +7,7 @@
 
 if(!require("shiny")) install.packages("shiny")
 if(!require("shinythemes")) install.packages("shinythemes")
+if(!require("shinyjs")) install.packages("shinyjs")
 if(!require("markdown")) install.packages("markdown")
 if(!require("ggplot2")) install.packages("ggplot2")
 if(!require("gridExtra")) install.packages("gridExtra")
@@ -151,7 +152,7 @@ shinyUI(
                    numericInput("sig.niveau", NULL, value = 0.05, min = 0, max = 1, step = 0.1),
                    helpText("3. Ablehnungsbereich einzeichnen ?"),
                    checkboxInput('crit.value.checkbox', label = "Ja", value = F)
-          ) # END tabPanel 
+          ) # END tabPanel
         ) # END tabsetPanel
         ), # END sidebarLayout
 

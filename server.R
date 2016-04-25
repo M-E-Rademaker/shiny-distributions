@@ -23,7 +23,7 @@ shinyServer(function(input, output, session) {
       
       uniblue <- "#063D79"
       
-      sig.niveau.local = ifelse(input$test.type == "Zweiseitig", 
+      sig.niveau.local = ifelse(input$test.type == "Zweiseitig",
                                 input$sig.niveau/2, input$sig.niveau)
       switch (input$dist,
               "Normalverteilung" = {
@@ -1198,137 +1198,137 @@ shinyServer(function(input, output, session) {
   ### Critical values ----------------------------------------------------------
   
   output$crit.value.text <- renderUI({
-    
+
     if(input$crit.value.checkbox){
-      
-      seg1 <- paste0("Für ein einen ", strong("Signifikanzniveau"), " von:", 
-                     code(input$sig.niveau), ifelse(input$test.type == "Zweiseitig", 
-                                                        " sind die kritischen Werte der ", 
+
+      seg1 <- paste0("Für ein einen ", strong("Signifikanzniveau"), " von:",
+                     code(input$sig.niveau), ifelse(input$test.type == "Zweiseitig",
+                                                        " sind die kritischen Werte der ",
                                                         " ist der kritische Werte der ")
-                     , strong(input$dist)) 
-      
+                     , strong(input$dist))
+
       switch (input$dist,
               'Normalverteilung' = {
-                
-                param <- paste0(" mit dem Erwartungswert \\(\\mu\\) = ", code(input$mu), 
+
+                param <- paste0(" mit dem Erwartungswert \\(\\mu\\) = ", code(input$mu),
                                 " und der Standardabweichung \\(\\sigma\\) = ", code(input$sigma))
-                
+
               }, # END Normalverteilung
               't-Verteilung' = {
-                
+
                 param <- paste0(" mit \\(k\\) = ", code(input$df.t), " Freiheitsgraden")
-                
+
               }, # END t-Verteilung
               'Chi-Quadrat-Verteilung' = {
-                
+
                 param <- paste0(" mit \\(k\\) = ", code(input$df.chi), " Freiheitsgraden")
-                
+
               },
               'F-Verteilung' = {
-                
-                param <- paste0(" mit \\(k_1\\) = ", code(input$df1), " Zähler", "-", 
+
+                param <- paste0(" mit \\(k_1\\) = ", code(input$df1), " Zähler", "-",
                                 " und \\(k_2\\) = ", code(input$df2), " Nennerfreiheitsgraden")
-                
+
               },
               'Exponentialverteilung' = {
-                
+
                 param <- paste0(" mit \\(\\alpha\\) = ", code(input$rate))
-                
+
               },
               'Stetige Gleichverteilung' = {
-                
-                param <- paste0(" mit der Untergrenze \\(a\\) = ", code(input$axis.updown[1]), 
+
+                param <- paste0(" mit der Untergrenze \\(a\\) = ", code(input$axis.updown[1]),
                                 " und der Obergrenze \\(b\\) = ", code(input$axis.updown[2]))
-                
+
               },
               'Binomialverteilung' = {
-                
+
                 param <- paste0(" mit \\(n\\) = ", code(input$size), " Versuchen ",
                                 " und Erfolgswahrscheinlichkeit \\(p\\) = ", code(input$prob))
-                
+
               },
               'Poisson-Verteilung' = {
-                
+
                 param <- paste0(" mit \\(\\lambda\\) = ", code(input$lambda))
-                
+
               }
       ) # END switch dist
-      
-      seg2 <- paste0(" bei einem ", 
-                     strong(ifelse(input$test.type == "Rechtsseitig", "rechtsseitigem", 
-                                   ifelse(input$test.type == "Linksseitig", "linksseitigem", "zweiseitigem"))), 
+
+      seg2 <- paste0(" bei einem ",
+                     strong(ifelse(input$test.type == "Rechtsseitig", "rechtsseitigem",
+                                   ifelse(input$test.type == "Linksseitig", "linksseitigem", "zweiseitigem"))),
                      " Test:")
-      sig.niveau.local = ifelse(input$test.type == "Zweiseitig", 
+      sig.niveau.local = ifelse(input$test.type == "Zweiseitig",
              input$sig.niveau/2, input$sig.niveau)
-      
+
       switch (input$dist,
                           'Normalverteilung' = {
-                            
+
                             q_low <- qnorm(sig.niveau.local, mean = input$mu, sd = input$sigma)
                             q_up <- qnorm(1 - sig.niveau.local, mean = input$mu, sd = input$sigma)
-                            
+
                           }, # END Normalverteilung
                           't-Verteilung' = {
-                            
+
                             q_low <- qt(sig.niveau.local, df = input$df.t)
                             q_up <- qt(1 - sig.niveau.local, df = input$df.t)
-                            
+
                           }, # END t-Verteilung
                           'Chi-Quadrat-Verteilung' = {
-                            
+
                             q_low <- qchisq(sig.niveau.local, df = input$df.chi)
                             q_up <- qchisq(1 - sig.niveau.local, df = input$df.chi)
-                            
+
                           }, # END Chi-Quadrat-Verteilung
                           'F-Verteilung' = {
-                            
+
                             q_low <- qf(sig.niveau.local, df1 = input$df1, df2 = input$df2)
                             q_up <- qf(1 - sig.niveau.local, df1 = input$df1, df2 = input$df2)
-                            
+
                           },
                           'Exponentialverteilung' = {
-                            
+
                             q_low <- qexp(sig.niveau.local, rate = input$rate)
                             q_up <- qexp(1 - sig.niveau.local, rate = input$rate)
-                            
+
                           },
                           'Stetige Gleichverteilung' = {
-                            
+
                             q_low <- qunif(sig.niveau.local, min = input$axis.updown[1], max = input$axis.updown[2])
                             q_up <- qunif(1 - sig.niveau.local, min = input$axis.updown[1], max = input$axis.updown[2])
-                            
+
                           },
                           'Binomialverteilung' = {
-                            
+
                             q_low <- qbinom(sig.niveau.local, size = input$size, prob = input$prob)
                             q_up <- qbinom(1 - sig.niveau.local, size = input$size, prob = input$prob)
-                            
+
                           },
                           'Poisson-Verteilung' = {
-                            
+
                             q_low <- qpois(sig.niveau.local, lambda = input$lambda)
                             q_up <- qpois(1 - sig.niveau.local, lambda = input$lambda)
-                            
+
                           }
       ) # END switch dist
-      
+
      crit.val <-  switch (input$test.type,
               "Rechtsseitig" = {
                 h4(code(round(q_up, 4)))
               },
-              
+
               "Linksseitig" = {
                 h4(code(round(q_low, 4)))
               },
-              
+
               "Zweiseitig" = {
                 paste(h4(code(round(q_low, 4))), " und ", h4(code(round(q_up, 4))))
               }
-              
+
       ) # END switch input$test.type
-      
+
       withMathJax(HTML(paste(seg1, param, seg2, crit.val)))
-      
+
       } # END if statement
   }) # END output$crit.value.text
   
