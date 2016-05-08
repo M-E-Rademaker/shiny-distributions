@@ -53,7 +53,7 @@ $$ x_p = F^{-1}(p) = F^{-1}[P(X \leq x_p)] $$
 + `=(x-a)/(b-a)`
 
     + $x$ := Stelle $x$ an der die Funktion ausgewertet werden soll 
-		+ $a$ := Untere Grenze
+    + $a$ := Untere Grenze
     + $b$ := Obere Grenze
 
 #### Quantilsfunktion der stetigen Gleichverteilung
