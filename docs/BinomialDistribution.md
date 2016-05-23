@@ -72,3 +72,14 @@ Die Funktion `BINOM.VERT.BEREICH` berechnet: $P(x_1 \leq X \leq x_2)$
     + $n$ := Anzahl "Versuche"
     + $p$ := Erfolgswahrscheinlichkeit
     + $\alpha$ := Wahrscheinlichkeit
+
+----
+
+**Bemerkung**
+
+`BINOM.VERT.BEREICH`($n$; $p$; $x_1$; $x_2$) = `BINOM.VERT`($x_2$; $n$; $p$; WAHR) 
+- `BINOM.VERT`($x_1 - 1$; $n$; $p$; WAHR)
+
+denn 
+
+$$ P(x_1 \leq X \leq x_2) = P(X \leq x_2) - P(X < x_1) = P(X \leq x_2) - P(X \leq (x_1 - 1)) $$

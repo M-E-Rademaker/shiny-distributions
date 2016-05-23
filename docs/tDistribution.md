@@ -31,6 +31,17 @@ $$ t_k \overset{d}{\longrightarrow} N(0, 1) $$
 Faustregel: für $k \geq 30$ kann die t-Verteilung relativ gut durch die
 Standardnormalverteilung approximiert werden.
 
+Motivieren lässt sich die t-Verteilung auch als Spezialfall der F-Verteilung, 
+denn falls
+
+$$ \frac{\chi^2_1/1}{\chi^2_{k_2}/k_2} = X \sim F(1, k_2) $$
+
+dann gilt
+
+$$ \frac{Z}{\sqrt{\chi^2_{k_2}/k_2}} = \sqrt{X} \sim t_k $$
+
+wobei $\sqrt{\chi^2_1} = Z \sim N(0,1)$. 
+
 ### Verteilungsfunktion
 
 Die Verteilungsfunktion ist definiert als:
