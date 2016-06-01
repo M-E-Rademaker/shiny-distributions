@@ -85,7 +85,7 @@ Die Funktion `F.VERT.RE` berechnet: $P(X \ge x)$
 
 #### Rechtseitiges Quantil der F-Verteilung
 
-+ `=F.INV.RE`($p$; $k$)
++ `=F.INV.RE`($p$; $k_1$; $k_2$)
 
     + $p$ := Eine Wahrscheinlichkeit
     + $k_1$ := Anzahl Zählerfreiheitsgrade
