@@ -33,7 +33,8 @@ Quotient zweier $\chi^2$-verteilten Zufallsvariaben, jeweils geteilt durch deren
 Freiheitsgrade gerade einer F-Verteilung folgt. Die F-Verteilung wird daher meist
 definiert als:
 
-$$ F_{k_1, k_2} = \frac{\frac{\chi^2_{k_1}}{k_1}}{\frac{\chi^2_{k_2}}{k_2}} $$
+$$ F_{k_1, k_2} = \frac{\frac{\chi^2_{k_1}}{k_1}}{\frac{\chi^2_{k_2}}{k_2}} = 
+\frac{\chi^2_{k_1}}{\chi^2_{k_2}}\cdot \frac{k_2}{k_1}$$
 
 ### Verteilungsfunktion
 
