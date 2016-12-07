@@ -38,9 +38,12 @@ $$ \frac{\chi^2_1/1}{\chi^2_{k_2}/k_2} = X \sim F(1, k_2) $$
 
 dann gilt
 
-$$ \frac{Z}{\sqrt{\chi^2_{k_2}/k_2}} = \sqrt{X} \sim t_k $$
+$$ \frac{Z}{\sqrt{\chi^2_{k_2}/k_2}} \sim t_k $$
 
-wobei $\sqrt{\chi^2_1} = Z \sim N(0,1)$. 
+wobei $Z \sim N(0,1)$. Symbolisch entspricht $Z$ der Wurzel aus einer $\chi^2_1$ Verteilung, sprich $Z = \sqrt{\chi^2_1}$. 
+Analog entspricht die Wurzel aus $X$ gerade $\frac{Z}{\sqrt{\chi^2_{k_2}/k_2}}$. 
+Allerdings ist die Notation symbolisch zu verstehen. Werden beispielsweise $n$ zufällige Wert 
+aus $X$ gezogen und **anschließend** jeweils deren Wurzel gezogen, dann folgt diese **nicht** einer t-Verteilung!
 
 ### Verteilungsfunktion
 
