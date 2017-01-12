@@ -28,7 +28,7 @@ wobei $\Gamma(x) = \int^{+\infty}_0 t^{x-1}e^{-t} dt$ die Gammafunktion an der S
 $x$ bezeichnet.
 
 Motivieren lässt sich die $\chi^2$-Verteilung alternativ durch die Tatsache, dass eine *Summe
-an stochastisch unabhängigen standardnormalverteilten Zufallsvariablen* gerade einer
+an stochastisch unabhängigen, quadrierten standardnormalverteilten Zufallsvariablen* gerade einer
 $\chi^2$-Verteilung mit $k$ Freiheitsgraden folgt. Dabei ist $k$ die Anzahl der Summenglieder. 
 Es gilt daher:
 
