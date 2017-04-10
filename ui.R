@@ -52,17 +52,17 @@ shinyUI(
             "Verteilungen",
             fluidRow(
               helpText("1. Wähle eine Verteilung"),
-              selectInput('dist', NULL, 
-                          c('Normalverteilung', 
-                            't-Verteilung',
-                            'Chi-Quadrat-Verteilung', 
-                            'F-Verteilung', 
-                            'Exponentialverteilung',
-                            'Stetige Gleichverteilung',
-                            'Binomialverteilung',
-                            'Poisson-Verteilung'
-                            )
-                          )
+              selectInput('dist', NULL, list(
+                "Stetige Verteilungen" = c('Normalverteilung', 
+                                           't-Verteilung',
+                                           'Chi-Quadrat-Verteilung', 
+                                           'F-Verteilung', 
+                                           'Exponentialverteilung',
+                                           'Stetige Gleichverteilung'),
+                "Diskrete Verteilungen" = c('Binomialverteilung',
+                                            'Poisson-Verteilung')
+                )
+              )
               ), # END fluidRow 
 
             ### Conditonal Panels ----------------------------------------------------------
