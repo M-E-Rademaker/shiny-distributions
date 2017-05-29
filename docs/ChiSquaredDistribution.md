@@ -74,7 +74,7 @@ Die Funktion `CHIQU.VERT.RE` berechnet: $P(X \ge x)$
 
 #### Quantilsfunktion der $\chi^2$-Verteilung
 
-+ `=CHIQU.INV`($p$; $k_1$; $k_2$)
++ `=CHIQU.INV`($p$; $k$)
 
     + $p$ := Eine Wahrscheinlichkeit
     + $k$ := Anzahl Freiheitsgrade
