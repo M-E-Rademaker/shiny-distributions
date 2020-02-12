@@ -77,8 +77,7 @@ Die Funktion `BINOM.VERT.BEREICH` berechnet: $P(x_1 \leq X \leq x_2)$
 
 **Bemerkung**
 
-`BINOM.VERT.BEREICH`($n$; $p$; $x_1$; $x_2$) = `BINOM.VERT`($x_2$; $n$; $p$; WAHR) 
-- `BINOM.VERT`($x_1 - 1$; $n$; $p$; WAHR)
+`BINOM.VERT.BEREICH`($n$; $p$; $x_1$; $x_2$) = `BINOM.VERT`($x_2$; $n$; $p$; WAHR) - `BINOM.VERT`($x_1 - 1$; $n$; $p$; WAHR)
 
 denn 
 
