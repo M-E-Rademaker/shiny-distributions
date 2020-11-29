@@ -36,7 +36,7 @@ shinyUI(
         br(),
         includeHTML("www/lehrstuhl.html"),
         tags$head(
-          tags$link(href = "shared/font-awesome/css/font-awesome.min.css",
+          tags$link(href = "favicon.ico",
                     rel = "stylesheet")
         )
       )),
